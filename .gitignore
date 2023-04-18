@@ -1,22 +1,8 @@
 data/
 # Unrelated files/folders
-code/
-CHARGE_GWAS/
-covid_RNAseq/
-doc/
-eQTL_gtex_pipeline/
-figures/
-genotype_data/
+prediction_models/
+input_docs/
 output/
-retinopathy_Dolly/
-RNAseq_gtex_pipeline/
-# Other files or large data files under multiomics folders
-lipidomics/output
-lipidomics/input
-lipidomics/prediction_models/input_docs
-metabolomics/docs
-proteomics/docs
-proteomics/genotype_files
 
 
 # Byte-compiled / optimized / DLL files
