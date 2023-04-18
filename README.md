@@ -1,1 +1,1 @@
-# CCHC_multiomics
+# CCHC lipidomics
