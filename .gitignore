@@ -1,6 +1,8 @@
 data/
 # Unrelated files/folders
+.ipynb_checkpoints/
 prediction_models/
+!prediction_models/code
 input_docs/
 output/
 
