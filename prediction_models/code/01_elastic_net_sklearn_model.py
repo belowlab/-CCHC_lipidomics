@@ -1,17 +1,24 @@
-from sklearn.linear_model import ElasticNet
 from sklearn.linear_model import ElasticNetCV
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 import os
 import time
+import argparse
+import sys
+sys.path.append('/data100t1/home/wanying/lab_code/utils')
+from rank_based_inverse_normal_transformation import inverse_normal_transformation
 import warnings
 import datetime
-print('Last run:', datetime.datetime.now().strftime('%Y-%m-%d'))
 warnings.filterwarnings(action='ignore')
 
-
+'''
+Example call:
+# python 01_elastic_net_sklearn_model.py --output lipid_species_l1_0.5_500-599.txt --output_dir /data100t1/home/wanying/CCHC/lipidomics/prediction_models/elastic_net/training/model_params --lipid_range 500
+python 01_elastic_net_sklearn_model.py --output lipid_species_l1_0.5_100-199.txt \
+--output_dir /data100t1/home/wanying/CCHC/lipidomics/prediction_models/elastic_net/training/model_params \
+--lipid_range 100 \
+--range_window 100
+'''
 # ---------------------- Help functions ----------------------
 def get_doasge(dosage_fn, lst_snps):
     '''
@@ -65,10 +72,10 @@ def get_doasge(dosage_fn, lst_snps):
                 line = fh.readline().strip()
                 count += 1
             
-            if count%300000==0:
+            if count%1000000==0:
                 print(f'{count} lines processed', flush=True)
                 print('\t', end='')
-            elif count%6000==0:
+            elif count%20000==0:
                 print('.', end='', flush=True)
     print(f'{count} lines processed')            
     return sample_ids, np.array(dosage_matrix).reshape(-1, len(sample_ids))
@@ -87,6 +94,7 @@ def load_all_dosage(gwas_snp_fn: str,
         - dosage_fn: file name of subset dosage files (by chromosome).
                     Replace chromosome number with '*', such as 'species_chr*.vcf.gz.dosage'
     Return:
+        - start_time: start time of loading dosage
         - df_gwas_snp: a dataframe of GWAS SNPs
         - dosage_all: A numpy array of doage. Each row is a SNP, each column is a subject
     '''
@@ -107,7 +115,7 @@ def load_all_dosage(gwas_snp_fn: str,
     print('# - Checking by chromosome:')
 
     dosage_all = '' # A numpy array to store dosage from all chromosome
-    start_time = datetime.datetime.now() # Time execution time
+    start_time = time.time() # Time execution time
     for chr_num, df in df_gwas_snp.groupby(by='CHR'):
         # dosage_fn = f'species_chr{chr_num}.vcf.gz.dosage'
         print(f'#  chr{chr_num}')
@@ -118,12 +126,32 @@ def load_all_dosage(gwas_snp_fn: str,
         else:
             dosage_all = np.append(dosage_all, dosage_matrix, axis=0)
         # break
-    end_time = datetime.datetime.now()
-    print(f'# - Checking finished in {(end_time-start_time).total_seconds()}s')
+    end_time = time.time()
+    print(f'# - Checking finished in {(start_time-end_time):.4f}s')
     print('-' * 50)
-    return df_gwas_snp, dosage_all.astype('float64')
+    return start_time, df_gwas_snp, dosage_all.astype('float64')
 
 # ---------------------- End of help functions ----------------------
+
+
+# ################# Process args #################
+parser = argparse.ArgumentParser(description='Fit elastic net regression with 10 fold cross-validation')
+parser.add_argument('-o', '--output', type=str,
+                           help='Output file to  save alpha, l1_ratio and coefficients of chosen model')
+parser.add_argument('--output_dir', type=str, help='Output directory. Defualt is current directory', default='.')
+parser.add_argument('--lipid_range', type=int, default=-1,
+                    help='Define a subset of lipids to run. Default -1 ie. run all lipids')
+parser.add_argument('--range_window', type=int, default=100,
+                    help='Define a window of lipids to run. Default is 100, will run from lipid_range to lipid_range+range_window-1')
+args = parser.parse_args()
+args.output = f"{args.output}.{datetime.datetime.now().strftime('%Y%m%d_%H:%M:%S')}"
+if args.output_dir.endswith('/'): args.output_dir = args.output_dir[:-1]
+print('# Run starts:', datetime.datetime.now().strftime('%Y-%m-%d'))
+print('# Output file is', f'{args.output_dir}/{args.output}')
+if args.lipid_range==0:
+    print('# Run all lipids')
+else:
+    print(f'# Run lipids from index {args.lipid_range} to {args.lipid_range + args.range_window - 1}')
 
 # ################# Load lipidomic data #################
 print('# Load lipidomic data (lipid species)')
@@ -154,25 +182,40 @@ print(f'# - Final processed lipidomic data: {len(df_lipid)}')
 # dosage_all: each row contains doages of a single SNP across all individuals
 # !! Lip species PI(15-MHDA_20:4)\PI(17:0_20:4) is missing
 gwas_snp_dir = '/data100t1/home/wanying/CCHC/lipidomics/output/lip_species_GWAS_snps_pval_1e-3' # GWAS SNPs with p value<1e-3
-output_file = f"{datetime.datetime.now().strftime('%Y%m%d-%M:%S')}_lip_species_elasticnet_params.txt" # Save coefficients, alpha and l1 ratios of selected model for each lipid
-output_fh = open(output_file, 'w')
+# Save coefficients, alpha and l1 ratios of selected model for each lipid
+output_fh = open(f'{args.output_dir}/{args.output}', 'w')
 output_fh.write('lipid\talpha\tl1_ratio\tcoefficients\n') # write header line
 
-for lip in df_lipid.columns[4:]:
+count = 0
+# get list of lipids to be fitted
+if args.lipid_range != -1:
+    if args.lipid_range>=len(df_lipid.columns[4:]):
+        print(f'# ERROR: lipid range {args.lipid_range} is out of range')
+        exit()
+    else:
+        try:
+            lst_lipids = df_lipid.columns[4+args.lipid_range : 4+args.lipid_range+args.range_window]
+        except:
+            # If window is too large, just run to the end of lipid list
+            lst_lipids = df_lipid.columns[4 + args.lipid_range:]
+else:
+    lst_lipids = df_lipid.columns[4:]
+
+for lip in lst_lipids:
     gwas_snp_fn = f"{lip.replace('(', '-').replace(')', '-').replace(' ', '_').replace('/', '-')}_SNPs_pval_0.001.txt"
     if os.path.isfile(f'{gwas_snp_dir}/{gwas_snp_fn}'):
         lip_name = gwas_snp_fn.split('_')[0] # Modified lipid name
         # Get SNPs and dosage
         print(f'\n# Load GWAS SNPs for current lipid: {lip_name}')
-        df_gwas_snp,dosage_all = load_all_dosage(gwas_snp_dir = gwas_snp_dir,
-                                                 gwas_snp_fn = gwas_snp_fn,
-                                                 dosage_dir = '/data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/subset_vcfs/train',
-                                                 dosage_fn = 'species_chr*.vcf.gz.dosage')
+        load_dosage_start_time, df_gwas_snp,dosage_all = load_all_dosage(gwas_snp_dir = gwas_snp_dir,
+                                                                         gwas_snp_fn = gwas_snp_fn,
+                                                                         dosage_dir = '/data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/subset_vcfs/train',
+                                                                         dosage_fn = 'species_chr*.vcf.gz.dosage')
         print(f'# - Number of SNPs loaded: {len(df_gwas_snp)}')
         
         print('# Run Elastic net regression')
-        # lipid level
-        y = df_lipid[lip]
+        # lipid level, INVed
+        y = inverse_normal_transformation(df_lipid[lip])
         # print(y.shape)
 
         start_time = time.time()
@@ -187,10 +230,11 @@ for lip in df_lipid.columns[4:]:
 
         end_time = time.time()
         print(f'# - Model fitting finised in {(end_time - start_time):.4f}s')
-        output_fh.write(f"{regr.alpha_}\t{regr.l1_ratio_}\t{','.join(str(x) for x in regr.coef_)}\n")
-        # alpha\tl1_ratio\tcoefficients\n'
+        output_fh.write(f"{lip}\t{regr.alpha_}\t{regr.l1_ratio_}\t{','.join(str(x) for x in regr.coef_)}\n")
+        print(f'# Total running time of current lipid: {(end_time - load_dosage_start_time):.4f}s')
         # break
     else:
         print(f'# - Warning: {lip} not found')
-    # break
+    count += 1
+    print(f'# #################### {count} lipid processed ####################')
 output_fh.close()

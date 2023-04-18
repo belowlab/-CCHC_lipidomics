@@ -6,11 +6,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 import time
+import argparse
 import warnings
 import datetime
 print('Last run:', datetime.datetime.now().strftime('%Y-%m-%d'))
 warnings.filterwarnings(action='ignore')
-
 
 # ---------------------- Help functions ----------------------
 def get_doasge(dosage_fn, lst_snps):
@@ -65,10 +65,10 @@ def get_doasge(dosage_fn, lst_snps):
                 line = fh.readline().strip()
                 count += 1
             
-            if count%300000==0:
+            if count%1000000==0:
                 print(f'{count} lines processed', flush=True)
                 print('\t', end='')
-            elif count%6000==0:
+            elif count%20000==0:
                 print('.', end='', flush=True)
     print(f'{count} lines processed')            
     return sample_ids, np.array(dosage_matrix).reshape(-1, len(sample_ids))
@@ -125,6 +125,11 @@ def load_all_dosage(gwas_snp_fn: str,
 
 # ---------------------- End of help functions ----------------------
 
+
+# ################# Process args #################
+parser = argparse.ArgumentParser(description='Fit elastic net regression with 10 fold cross-validation',
+                                 epilog='Text at the bottom of help')
+
 # ################# Load lipidomic data #################
 print('# Load lipidomic data (lipid species)')
 fn_lipid = '/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_measures/lipid_species.txt'
@@ -158,6 +163,7 @@ output_file = f"{datetime.datetime.now().strftime('%Y%m%d-%M:%S')}_lip_species_e
 output_fh = open(output_file, 'w')
 output_fh.write('lipid\talpha\tl1_ratio\tcoefficients\n') # write header line
 
+count = 0 
 for lip in df_lipid.columns[4:]:
     gwas_snp_fn = f"{lip.replace('(', '-').replace(')', '-').replace(' ', '_').replace('/', '-')}_SNPs_pval_0.001.txt"
     if os.path.isfile(f'{gwas_snp_dir}/{gwas_snp_fn}'):
@@ -171,8 +177,8 @@ for lip in df_lipid.columns[4:]:
         print(f'# - Number of SNPs loaded: {len(df_gwas_snp)}')
         
         print('# Run Elastic net regression')
-        # lipid level
-        y = df_lipid[lip]
+        # lipid level, INVed
+        y = inverse_normal_transformation(df_lipid[lip])
         # print(y.shape)
 
         start_time = time.time()
@@ -187,10 +193,11 @@ for lip in df_lipid.columns[4:]:
 
         end_time = time.time()
         print(f'# - Model fitting finised in {(end_time - start_time):.4f}s')
-        output_fh.write(f"{regr.alpha_}\t{regr.l1_ratio_}\t{','.join(str(x) for x in regr.coef_)}\n")
+        output_fh.write(f"{lip}\t{regr.alpha_}\t{regr.l1_ratio_}\t{','.join(str(x) for x in regr.coef_)}\n")
         # alpha\tl1_ratio\tcoefficients\n'
         # break
     else:
         print(f'# - Warning: {lip} not found')
-    # break
+    count += 1
+    print(f'# #################### {count} lipid processed ####################')
 output_fh.close()
