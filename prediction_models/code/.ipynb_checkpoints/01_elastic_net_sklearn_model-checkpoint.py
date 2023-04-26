@@ -1,17 +1,36 @@
-from sklearn.linear_model import ElasticNet
 from sklearn.linear_model import ElasticNetCV
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 import os
 import time
 import argparse
+import sys
+# sys.path.append('/data100t1/home/wanying/lab_code/utils')
+# from rank_based_inverse_normal_transformation import inverse_normal_transformation
 import warnings
 import datetime
-print('Last run:', datetime.datetime.now().strftime('%Y-%m-%d'))
 warnings.filterwarnings(action='ignore')
 
+'''
+Example call:
+# python 01_elastic_net_sklearn_model.py --output lipid_species_l1_0.5_500-599.txt --output_dir /data100t1/home/wanying/CCHC/lipidomics/prediction_models/elastic_net/training/model_params --lipid_range 500 --range_window 100 --n_alphas 10
+
+python 01_elastic_net_sklearn_model.py --output lipid_species_l1_0.5_100-199.txt \
+--output_dir /data100t1/home/wanying/CCHC/lipidomics/prediction_models/elastic_net/training/model_params \
+--lipid_range 100 \
+--range_window 100 \
+--n_alphas 100
+
+# (Per AlexP) To run in base environment and avoid multi-threading conflict
+# Run script as: OMP_NUM_THREADS=1 python my_script.py, for example:
+
+OMP_NUM_THREADS=1 python 01_elastic_net_sklearn_model.py --output lipid_species_l1_0.5_5-104_100_alpha_CV.txt \
+--output_dir /data100t1/home/wanying/CCHC/lipidomics/prediction_models/elastic_net/training/model_params/100alphas \
+--lipid_range 5 \
+--range_window 100 \
+--n_alphas 100
+
+'''
 # ---------------------- Help functions ----------------------
 def get_doasge(dosage_fn, lst_snps):
     '''
@@ -87,6 +106,7 @@ def load_all_dosage(gwas_snp_fn: str,
         - dosage_fn: file name of subset dosage files (by chromosome).
                     Replace chromosome number with '*', such as 'species_chr*.vcf.gz.dosage'
     Return:
+        - start_time: start time of loading dosage
         - df_gwas_snp: a dataframe of GWAS SNPs
         - dosage_all: A numpy array of doage. Each row is a SNP, each column is a subject
     '''
@@ -107,7 +127,7 @@ def load_all_dosage(gwas_snp_fn: str,
     print('# - Checking by chromosome:')
 
     dosage_all = '' # A numpy array to store dosage from all chromosome
-    start_time = datetime.datetime.now() # Time execution time
+    start_time = time.time() # Time execution time
     for chr_num, df in df_gwas_snp.groupby(by='CHR'):
         # dosage_fn = f'species_chr{chr_num}.vcf.gz.dosage'
         print(f'#  chr{chr_num}')
@@ -118,21 +138,41 @@ def load_all_dosage(gwas_snp_fn: str,
         else:
             dosage_all = np.append(dosage_all, dosage_matrix, axis=0)
         # break
-    end_time = datetime.datetime.now()
-    print(f'# - Checking finished in {(end_time-start_time).total_seconds()}s')
+    end_time = time.time()
+    print(f'# - Checking finished in {(end_time-start_time):.4f}s')
     print('-' * 50)
-    return df_gwas_snp, dosage_all.astype('float64')
+    return start_time, df_gwas_snp, dosage_all.astype('float64')
 
 # ---------------------- End of help functions ----------------------
 
 
 # ################# Process args #################
-parser = argparse.ArgumentParser(description='Fit elastic net regression with 10 fold cross-validation',
-                                 epilog='Text at the bottom of help')
+parser = argparse.ArgumentParser(description='Fit elastic net regression with 10 fold cross-validation')
+parser.add_argument('-o', '--output', type=str,
+                           help='Output file to  save alpha, l1_ratio and coefficients of chosen model')
+parser.add_argument('--output_dir', type=str, help='Output directory. Defualt is current directory', default='.')
+parser.add_argument('--lipid_range', type=int, default=-1,
+                    help='Define a subset of lipids to run. Default -1 ie. run all lipids')
+parser.add_argument('--range_window', type=int, default=100,
+                    help='Define a window of lipids to run. Default is 100, will run from lipid_range to lipid_range+range_window-1')
+parser.add_argument('--n_alphas', type=int, default=100,
+                    help='Define how many alphas to test in CV. Dafault is 10. JTI used 100 as defined in R glmnet()')
+
+args = parser.parse_args()
+args.output = f"{args.output}.{datetime.datetime.now().strftime('%Y%m%d_%H:%M:%S')}"
+if args.output_dir.endswith('/'): args.output_dir = args.output_dir[:-1]
+print('# Run starts:', datetime.datetime.now().strftime('%Y-%m-%d'))
+print('# Output file is', f'{args.output_dir}/{args.output}')
+print(f'# Cross validation on {args.n_alphas} alphas')
+if args.lipid_range==0:
+    print('# Run all lipids')
+else:
+    print(f'# Run lipids from index {args.lipid_range} to {args.lipid_range + args.range_window - 1}')
 
 # ################# Load lipidomic data #################
 print('# Load lipidomic data (lipid species)')
-fn_lipid = '/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_measures/lipid_species.txt'
+# fn_lipid = '/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_measures/lipid_species.txt'
+fn_lipid = '/data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/lipid_traits_residuals/train/lipid_species_residuals_adj_for_sex_age_pc1-5.txt.reformatted'
 df_lipid = pd.read_csv(fn_lipid, sep='\t')
 print(f"# - data loaded from {fn_lipid.split('/')[-1]}: shape {df_lipid.shape}")
 
@@ -140,7 +180,7 @@ print(f"# - data loaded from {fn_lipid.split('/')[-1]}: shape {df_lipid.shape}")
 fn_id_mapping = '/data100t1/home/wanying/CCHC/doc/samples_IDs/202211_merged_RNA_lipid_protein_genotype_mapping_and_availability.txt'
 df_id_mapping = pd.read_csv(fn_id_mapping,
                             sep='\t').dropna(subset=['genotype_ID',
-                                                     'lipidomic']).drop_duplicates(subset='genotype_ID')[['LABID', 'genotype_ID']]
+                                                     'lipidomic']).drop_duplicates(subset='lipidomic')[['LABID', 'genotype_ID']]
 
 print(f'\n# Load genotype IDs for matching (only need to read the first line of dosage file)')
 dosage_dir = '/data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/subset_vcfs/train'
@@ -159,45 +199,74 @@ print(f'# - Final processed lipidomic data: {len(df_lipid)}')
 # dosage_all: each row contains doages of a single SNP across all individuals
 # !! Lip species PI(15-MHDA_20:4)\PI(17:0_20:4) is missing
 gwas_snp_dir = '/data100t1/home/wanying/CCHC/lipidomics/output/lip_species_GWAS_snps_pval_1e-3' # GWAS SNPs with p value<1e-3
-output_file = f"{datetime.datetime.now().strftime('%Y%m%d-%M:%S')}_lip_species_elasticnet_params.txt" # Save coefficients, alpha and l1 ratios of selected model for each lipid
-output_fh = open(output_file, 'w')
-output_fh.write('lipid\talpha\tl1_ratio\tcoefficients\n') # write header line
+# Save coefficients, alpha and l1 ratios of selected model for each lipid
+output_fh = open(f'{args.output_dir}/{args.output}', 'w')
+output_fh.write('lipid\talpha\tl1_ratio\tbest_r2\tcoefficients\n') # write header line
+output_fh_lip_pred = open(f'{args.output_dir}/{args.output}.pred', 'w') # Save predicted values of each lipid using best fitted model
+output_fh_lip_pred.write('Lipid'+'\t'+'\t'.join([val for val in df_lipid['Sample ID']])+'\n') # write header line
 
-count = 0 
-for lip in df_lipid.columns[4:]:
+count = 0
+# get list of lipids to be fitted
+if args.lipid_range != -1:
+    if args.lipid_range>=len(df_lipid.columns[4:]):
+        print(f'# ERROR: lipid range {args.lipid_range} is out of range')
+        exit()
+    else:
+        try:
+            lst_lipids = df_lipid.columns[4+args.lipid_range : 4+args.lipid_range+args.range_window]
+        except:
+            # If window is too large, just run to the end of lipid list
+            lst_lipids = df_lipid.columns[4 + args.lipid_range:]
+else:
+    lst_lipids = df_lipid.columns[4:]
+
+for lip in lst_lipids:
     gwas_snp_fn = f"{lip.replace('(', '-').replace(')', '-').replace(' ', '_').replace('/', '-')}_SNPs_pval_0.001.txt"
     if os.path.isfile(f'{gwas_snp_dir}/{gwas_snp_fn}'):
         lip_name = gwas_snp_fn.split('_')[0] # Modified lipid name
         # Get SNPs and dosage
         print(f'\n# Load GWAS SNPs for current lipid: {lip_name}')
-        df_gwas_snp,dosage_all = load_all_dosage(gwas_snp_dir = gwas_snp_dir,
-                                                 gwas_snp_fn = gwas_snp_fn,
-                                                 dosage_dir = '/data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/subset_vcfs/train',
-                                                 dosage_fn = 'species_chr*.vcf.gz.dosage')
+        load_dosage_start_time, df_gwas_snp,dosage_all = load_all_dosage(gwas_snp_dir = gwas_snp_dir,
+                                                                         gwas_snp_fn = gwas_snp_fn,
+                                                                         dosage_dir = '/data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/subset_vcfs/train',
+                                                                         dosage_fn = 'species_chr*.vcf.gz.dosage')
         print(f'# - Number of SNPs loaded: {len(df_gwas_snp)}')
         
         print('# Run Elastic net regression')
-        # lipid level, INVed
-        y = inverse_normal_transformation(df_lipid[lip])
+        # lipid trait, already residuals and looks normal, so no need to INV
+        y = df_lipid[lip]
+        # y = inverse_normal_transformation(df_lipid[lip])
         # print(y.shape)
 
         start_time = time.time()
-        # regr = ElasticNet(alpha=0.5, max_iter=10000, random_state=0)
-        # regr = ElasticNet(alpha=0.5, random_state=0)
-        # alphas = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
-        alphas = [0.25, 0.5, 0.75, 1]
-        # l1_ratio = [0.1, 0.5, 0.7, 0.9, 0.95, 0.99, 1] # It is recommanded to put more values close to 1 (i.e. Lasso) and less close to 0 (i.e. Ridge)
-        # regr = ElasticNetCV(cv=10, random_state=0, n_jobs=32, alphas=alphas, l1_ratio=l1_ratio)
-        regr = ElasticNetCV(cv=10, random_state=0, n_jobs=32, alphas=alphas) # Try 11 ratio=0.5 first
-        regr.fit(dosage_all.T, y)
+        # Notes from sklearn docs:
+        # - l1_ratio is the alpha in R glmnet
+        # - alpha is the lambda in R gmlnet
+        # Since PrediXcan used glmnet with alpha=0.5,and lambda selected by 10 fold cv,
+        # The corresponding parameter in sklearn.ElasticNetCV() are:
+        # - l1_ratio=0.5
+        # - n_alphas=100, no user supllied selections for alpha, start with n_alphas=10 to save time (#TODO test how long it takes to run a full CV with 100 alphas)
+        # - In R glmnet, when nobs > nvars, the default lambda.min.ratio is 0.0001
+        # - 10 fold cv
+        regr = ElasticNetCV(cv=10,
+                            n_alphas=args.n_alphas,
+                            random_state=0,
+                            n_jobs=32,
+                            l1_ratio=0.5) # Default l1 ratio=0.5
+        X = dosage_all.T
+        regr.fit(X, y)
 
         end_time = time.time()
         print(f'# - Model fitting finised in {(end_time - start_time):.4f}s')
-        output_fh.write(f"{lip}\t{regr.alpha_}\t{regr.l1_ratio_}\t{','.join(str(x) for x in regr.coef_)}\n")
-        # alpha\tl1_ratio\tcoefficients\n'
+        
+        # Also output predicted values and best R2
+        output_fh.write(f"{lip}\t{regr.alpha_}\t{regr.l1_ratio_}\t{regr.score(X, y)}\t{','.join([str(x) for x in regr.coef_])}\n")
+        output_fh_lip_pred.write(lip+'\t'+'\t'.join([str(val) for val in regr.predict(X)])+'\n')
+        print(f'# Total running time of current lipid: {(end_time - load_dosage_start_time)/60:.4f}m')
         # break
     else:
         print(f'# - Warning: {lip} not found')
     count += 1
     print(f'# #################### {count} lipid processed ####################')
 output_fh.close()
+output_fh_lip_pred.close()
