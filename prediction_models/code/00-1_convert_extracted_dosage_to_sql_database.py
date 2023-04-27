@@ -24,7 +24,7 @@ with open(f'{dosage_dir}/species_chr1.vcf.gz.dosage') as fh:
     header = fh.readline().strip().split()
 # Drop some columns such as QUAL, FILTER, etc.
 # Specify data types. (Recommended by AlexP)
-header = ['CHROM TEXT', 'POS INT', 'ID TEXT', 'REF TEXT', 'ALT TEXT', 'INFO TEXT'] + [f'{val} REAL' for val in header[9:]]
+header = ['CHROM INT', 'POS INT', 'ID TEXT', 'REF TEXT', 'ALT TEXT', 'INFO TEXT'] + [f'{val} REAL' for val in header[9:]]
 cur.execute(f"DROP TABLE IF EXISTS dosage") # Drop before create dosage table 
 cur.execute(f"CREATE TABLE dosage ({', '.join(header)})")
 
@@ -36,7 +36,6 @@ The syntex to insert values is (text must be surrounded by quotes):
             ('Monty Python and the Holy Grail', 1975, 8.2),
             ('And Now for Something Completely Different', 1971, 7.5)
     """)
-
 '''
 for chr_num in range(1,23):
     fn = f'species_chr{chr_num}.vcf.gz.dosage'
@@ -51,8 +50,10 @@ for chr_num in range(1,23):
             for indx in [8, 6, 5]:
                 tmp_list.pop(indx) # Remove values in column QUAL, FILTER and FORMAT
             # Add quotes to value at indices 0,2,3,4,5, so that they can be inserted as text
-            for indx in [0,2,3,4,5]:
+            for indx in [2,3,4,5]:
                 tmp_list[indx] = f"'{tmp_list[indx]}'"
+            # Remove "chr" so that chromosome numbers can be saved as integer
+            tmp_list[0] = tmp_list[0].split('chr')[-1]
             cur.execute(f"INSERT INTO dosage VALUES ({', '.join(tmp_list)})")
             count += 1
             if count%100000 == 0:
@@ -60,6 +61,8 @@ for chr_num in range(1,23):
             elif count%2500 == 0:
                 print('.', end='', flush=True)
             line = fh.readline().strip()
+        print(f'{count} lines processed')
+        con.commit() # Need to commit so that changes can take place
 end = time.time()
 print('\n#Done')
 print(f'#Finished in {(end-start)/60:.4f}m')
