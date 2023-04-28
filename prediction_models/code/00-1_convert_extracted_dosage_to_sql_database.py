@@ -1,13 +1,36 @@
+'''
+Call as
+python 00-1_convert_extracted_dosage_to_sql_database.py \
+--output_dir /data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/sqlDB \
+--output_fn dosage_train.db \
+--dosage_dir /data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/subset_vcfs/train \
+--dosage_fn species_chr*.vcf.gz.dosage
+'''
 import sqlite3
 import os
 import datetime
 print('Last run:', datetime.datetime.now().strftime('%Y-%m-%d'))
 import time
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--output_dir', help='Output directory', default='/data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/sqlDB')
+parser.add_argument('--output_fn', help='Output database name')
+parser.add_argument('--dosage_dir', help='Directory to dosage file')
+parser.add_argument('--dosage_fn', help='File name format of dosage file. Use * to represent chromosome number',
+                    default='species_chr*.vcf.gz.dosage')
+args = parser.parse_args()
+print(f'#Create SQL database at: {args.output_dir}/{args.output_fn}')
+
 
 start = time.time()
 # Create a sql database
-db_dir = '/data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/sqlDB'
-db_fn = 'dosage_train.db'
+if args.output_dir.endswith('/'): db_dir = args.output_dir[:-1] # Remove last backslash
+else: db_dir = args.output_dir
+if args.dosage_dir.endswith('/'): dosage_dir = args.dosage_dir[:-1]
+else: dosage_dir = args.dosage_dir
+
+db_fn = args.output_fn
 if not os.path.isfile(f'{db_dir}/{db_fn}'):
     print(f'#Create a empty SQL database: {db_dir}/{db_fn}')
     con = sqlite3.connect(f'{db_dir}/{db_fn}')
@@ -16,11 +39,10 @@ else:
     print(f'#Database already exists: {db_dir}/{db_fn}')
     print('#Exit')
     exit()
+print(f'#Load dosage files from {dosage_dir}/{args.dosage_fn}')
 
-# Dosage files: species_chr*.vcf.gz.dosage
-dosage_dir = '/data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/subset_vcfs/train'
 # Get column names of the table
-with open(f'{dosage_dir}/species_chr1.vcf.gz.dosage') as fh:
+with open(f"{dosage_dir}/{args.dosage_fn.replace('*', '1')}") as fh:
     header = fh.readline().strip().split()
 # Drop some columns such as QUAL, FILTER, etc.
 # Specify data types. (Recommended by AlexP)
@@ -38,7 +60,7 @@ The syntex to insert values is (text must be surrounded by quotes):
     """)
 '''
 for chr_num in range(1,23):
-    fn = f'species_chr{chr_num}.vcf.gz.dosage'
+    fn = args.dosage_fn.replace('*', str(chr_num))
     print(f'#Insert values from {fn}')
     with open(f'{dosage_dir}/{fn}') as fh:
         line = fh.readline() # Skip header line
