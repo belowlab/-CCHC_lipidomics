@@ -1,0 +1,2607 @@
+[01;32mwanying@vgipiper[00m:[01;34m~/CCHC/lipidomics/prediction_models/code[00m$ OMP_NUM_THREADS=1 python 01_elastic_net_sklearn_model.py --output lipid_species_l1_0.5_78-122_100alphaCV.txt --lipid_range 78 --range_window 45 --n_alphas 100
+# Run starts: 2023-04-26
+# Output file is ./lipid_species_l1_0.5_78-122_100alphaCV.txt.20230426_01:43:13
+# Cross validation on 100 alphas
+# Run lipids from index 78 to 122
+# Load lipidomic data (lipid species)
+# - data loaded from lipid_species_residuals_adj_for_sex_age_pc1-5.txt.reformatted: shape (1607, 831)
+
+# Load genotype IDs for matching (only need to read the first line of dosage file)
+# - Organize sample IDs so that their orders match in lipidomics data and dosage file
+# - Final processed lipidomic data: 1607
+
+# Load GWAS SNPs for current lipid: HexCer-d18:2-24:0-
+# Processing lipid: HexCer-d18:2-24:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778298 lines processed
+#  chr2
+	...................^CTraceback (most recent call last):
+  File "/belowshare/vumcshare/data100t1/home/wanying/CCHC/lipidomics/prediction_models/code/01_elastic_net_sklearn_model.py", line 229, in <module>
+    load_dosage_start_time, df_gwas_snp,dosage_all = load_all_dosage(gwas_snp_dir = gwas_snp_dir,
+  File "/belowshare/vumcshare/data100t1/home/wanying/CCHC/lipidomics/prediction_models/code/01_elastic_net_sklearn_model.py", line 134, in load_all_dosage
+    sample_ids, dosage_matrix = get_doasge(f"{dosage_dir}/{dosage_fn.replace('*', str(chr_num))}", list(df['POS']))
+  File "/belowshare/vumcshare/data100t1/home/wanying/CCHC/lipidomics/prediction_models/code/01_elastic_net_sklearn_model.py", line 59, in get_doasge
+    tmp = line.split()
+KeyboardInterrupt
+
+[01;32mwanying@vgipiper[00m:[01;34m~/CCHC/lipidomics/prediction_models/code[00m$ 
+[01;32mwanying@vgipiper[00m:[01;34m~/CCHC/lipidomics/prediction_models/code[00m$ OMP_NUM_THREADS=1 python 01_elastic_net_sklearn_model.py --output lipid_species_l1_0.5_78-122_100alphaCV.txt --output_dir /data100t1/home/wanying/CCHC/lipidomics/prediction_models/elastic_net/training/model_params/100alphas --lipid_range 78 --range_window 45 --n_alphas 100
+# Run starts: 2023-04-26
+# Output file is /data100t1/home/wanying/CCHC/lipidomics/prediction_models/elastic_net/training/model_params/100alphas/lipid_species_l1_0.5_78-122_100alphaCV.txt.20230426_01:46:08
+# Cross validation on 100 alphas
+# Run lipids from index 78 to 122
+# Load lipidomic data (lipid species)
+# - data loaded from lipid_species_residuals_adj_for_sex_age_pc1-5.txt.reformatted: shape (1607, 831)
+
+# Load genotype IDs for matching (only need to read the first line of dosage file)
+# - Organize sample IDs so that their orders match in lipidomics data and dosage file
+# - Final processed lipidomic data: 1607
+
+# Load GWAS SNPs for current lipid: HexCer-d18:2-24:0-
+# Processing lipid: HexCer-d18:2-24:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778298 lines processed
+#  chr2
+	..........................................841700 lines processed
+#  chr3
+	..................................691081 lines processed
+#  chr4
+	..................................680225 lines processed
+#  chr5
+	...............................637405 lines processed
+#  chr6
+	..............................614550 lines processed
+#  chr7
+	...........................550839 lines processed
+#  chr8
+	...........................552571 lines processed
+#  chr9
+	.....................431073 lines processed
+#  chr10
+	........................491926 lines processed
+#  chr11
+	.........................517578 lines processed
+#  chr12
+	......................451542 lines processed
+#  chr13
+	.................341757 lines processed
+#  chr14
+	...............315321 lines processed
+#  chr15
+	..............285042 lines processed
+#  chr16
+	...............309989 lines processed
+#  chr17
+	.............276793 lines processed
+#  chr18
+	.............278064 lines processed
+#  chr19
+	..........218711 lines processed
+#  chr20
+	..........218860 lines processed
+#  chr21
+	......126489 lines processed
+#  chr22
+	......135778 lines processed
+# - Checking finished in 339.0362s
+--------------------------------------------------
+# - Number of SNPs loaded: 58677
+# Run Elastic net regression
+# - Model fitting finised in 2552.5176s
+# Total running time of current lipid: 48.7176m
+# #################### 1 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: Hex2Cer-d16:1-16:0-
+# Processing lipid: Hex2Cer-d16:1-16:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778043 lines processed
+#  chr2
+	..........................................841006 lines processed
+#  chr3
+	..................................690449 lines processed
+#  chr4
+	..................................680225 lines processed
+#  chr5
+	...............................637671 lines processed
+#  chr6
+	..............................614579 lines processed
+#  chr7
+	...........................551013 lines processed
+#  chr8
+	...........................552406 lines processed
+#  chr9
+	.....................429518 lines processed
+#  chr10
+	........................491687 lines processed
+#  chr11
+	.........................517610 lines processed
+#  chr12
+	......................452050 lines processed
+#  chr13
+	.................341451 lines processed
+#  chr14
+	...............315453 lines processed
+#  chr15
+	..............284798 lines processed
+#  chr16
+	...............310671 lines processed
+#  chr17
+	.............276910 lines processed
+#  chr18
+	.............277716 lines processed
+#  chr19
+	..........219289 lines processed
+#  chr20
+	..........218756 lines processed
+#  chr21
+	......126743 lines processed
+#  chr22
+	......135732 lines processed
+# - Checking finished in 405.5213s
+--------------------------------------------------
+# - Number of SNPs loaded: 68696
+# Run Elastic net regression
+# - Model fitting finised in 4522.9089s
+# Total running time of current lipid: 82.7497m
+# #################### 2 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: Hex2Cer-d16:1-24:1-
+# Processing lipid: Hex2Cer-d16:1-24:1-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778109 lines processed
+#  chr2
+	..........................................841679 lines processed
+#  chr3
+	..................................691176 lines processed
+#  chr4
+	..................................680250 lines processed
+#  chr5
+	...............................637668 lines processed
+#  chr6
+	..............................614485 lines processed
+#  chr7
+	...........................551048 lines processed
+#  chr8
+	...........................552238 lines processed
+#  chr9
+	.....................431150 lines processed
+#  chr10
+	........................491971 lines processed
+#  chr11
+	.........................517546 lines processed
+#  chr12
+	......................452229 lines processed
+#  chr13
+	.................341705 lines processed
+#  chr14
+	...............315468 lines processed
+#  chr15
+	..............284774 lines processed
+#  chr16
+	...............310342 lines processed
+#  chr17
+	.............276910 lines processed
+#  chr18
+	.............277860 lines processed
+#  chr19
+	..........219359 lines processed
+#  chr20
+	..........218932 lines processed
+#  chr21
+	......126515 lines processed
+#  chr22
+	......135151 lines processed
+# - Checking finished in 407.2188s
+--------------------------------------------------
+# - Number of SNPs loaded: 59665
+# Run Elastic net regression
+# - Model fitting finised in 3652.7127s
+# Total running time of current lipid: 68.2189m
+# #################### 3 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: Hex2Cer-d18:1-16:0-
+# Processing lipid: Hex2Cer-d18:1-16:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778083 lines processed
+#  chr2
+	..........................................841679 lines processed
+#  chr3
+	..................................691003 lines processed
+#  chr4
+	.................................679485 lines processed
+#  chr5
+	...............................637551 lines processed
+#  chr6
+	..............................614505 lines processed
+#  chr7
+	...........................551048 lines processed
+#  chr8
+	...........................551564 lines processed
+#  chr9
+	.....................431212 lines processed
+#  chr10
+	........................492009 lines processed
+#  chr11
+	.........................517637 lines processed
+#  chr12
+	......................452229 lines processed
+#  chr13
+	.................341213 lines processed
+#  chr14
+	...............315457 lines processed
+#  chr15
+	..............284890 lines processed
+#  chr16
+	...............310613 lines processed
+#  chr17
+	.............276912 lines processed
+#  chr18
+	.............277960 lines processed
+#  chr19
+	..........219141 lines processed
+#  chr20
+	..........218669 lines processed
+#  chr21
+	......126099 lines processed
+#  chr22
+	......135985 lines processed
+# - Checking finished in 365.2158s
+--------------------------------------------------
+# - Number of SNPs loaded: 56105
+# Run Elastic net regression
+# - Model fitting finised in 2858.6720s
+# Total running time of current lipid: 54.2529m
+# #################### 4 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: Hex2Cer-d18:1-20:0-
+# Processing lipid: Hex2Cer-d18:1-20:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................777199 lines processed
+#  chr2
+	..........................................841550 lines processed
+#  chr3
+	..................................691136 lines processed
+#  chr4
+	..................................680192 lines processed
+#  chr5
+	...............................636808 lines processed
+#  chr6
+	..............................614573 lines processed
+#  chr7
+	...........................550728 lines processed
+#  chr8
+	...........................549268 lines processed
+#  chr9
+	.....................429453 lines processed
+#  chr10
+	........................491823 lines processed
+#  chr11
+	.........................517722 lines processed
+#  chr12
+	......................452312 lines processed
+#  chr13
+	.................341579 lines processed
+#  chr14
+	...............314793 lines processed
+#  chr15
+	..............284882 lines processed
+#  chr16
+	...............310735 lines processed
+#  chr17
+	.............276849 lines processed
+#  chr18
+	.............277132 lines processed
+#  chr19
+	..........218565 lines processed
+#  chr20
+	..........218858 lines processed
+#  chr21
+	......125632 lines processed
+#  chr22
+	......135932 lines processed
+# - Checking finished in 449.7197s
+--------------------------------------------------
+# - Number of SNPs loaded: 34430
+# Run Elastic net regression
+# - Model fitting finised in 1780.3194s
+# Total running time of current lipid: 37.4359m
+# #################### 5 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: Hex2Cer-d18:1-22:0-
+# Processing lipid: Hex2Cer-d18:1-22:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778245 lines processed
+#  chr2
+	..........................................841550 lines processed
+#  chr3
+	..................................689925 lines processed
+#  chr4
+	..................................680192 lines processed
+#  chr5
+	...............................637140 lines processed
+#  chr6
+	..............................613944 lines processed
+#  chr7
+	...........................550728 lines processed
+#  chr8
+	...........................551555 lines processed
+#  chr9
+	.....................431109 lines processed
+#  chr10
+	........................489627 lines processed
+#  chr11
+	.........................517709 lines processed
+#  chr12
+	......................450920 lines processed
+#  chr13
+	.................341684 lines processed
+#  chr14
+	...............314415 lines processed
+#  chr15
+	..............284504 lines processed
+#  chr16
+	...............310609 lines processed
+#  chr17
+	.............276849 lines processed
+#  chr18
+	.............277964 lines processed
+#  chr19
+	..........218831 lines processed
+#  chr20
+	..........218788 lines processed
+#  chr21
+	......126747 lines processed
+#  chr22
+	......135876 lines processed
+# - Checking finished in 402.1266s
+--------------------------------------------------
+# - Number of SNPs loaded: 40177
+# Run Elastic net regression
+# - Model fitting finised in 1616.8661s
+# Total running time of current lipid: 34.0334m
+# #################### 6 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: Hex2Cer-d18:1-24:0-
+# Processing lipid: Hex2Cer-d18:1-24:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778245 lines processed
+#  chr2
+	..........................................841732 lines processed
+#  chr3
+	..................................690058 lines processed
+#  chr4
+	..................................680192 lines processed
+#  chr5
+	...............................637140 lines processed
+#  chr6
+	..............................613430 lines processed
+#  chr7
+	...........................551060 lines processed
+#  chr8
+	...........................551555 lines processed
+#  chr9
+	.....................431109 lines processed
+#  chr10
+	........................491971 lines processed
+#  chr11
+	.........................517709 lines processed
+#  chr12
+	......................451750 lines processed
+#  chr13
+	.................340556 lines processed
+#  chr14
+	...............315151 lines processed
+#  chr15
+	..............284675 lines processed
+#  chr16
+	...............310613 lines processed
+#  chr17
+	.............276849 lines processed
+#  chr18
+	.............277511 lines processed
+#  chr19
+	..........218831 lines processed
+#  chr20
+	..........218788 lines processed
+#  chr21
+	......126291 lines processed
+#  chr22
+	......135886 lines processed
+# - Checking finished in 411.6562s
+--------------------------------------------------
+# - Number of SNPs loaded: 52662
+# Run Elastic net regression
+# - Model fitting finised in 2792.7159s
+# Total running time of current lipid: 53.8966m
+# #################### 7 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: Hex2Cer-d18:1-24:1-
+# Processing lipid: Hex2Cer-d18:1-24:1-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778083 lines processed
+#  chr2
+	..........................................841679 lines processed
+#  chr3
+	..................................691003 lines processed
+#  chr4
+	..................................680225 lines processed
+#  chr5
+	...............................637429 lines processed
+#  chr6
+	..............................614505 lines processed
+#  chr7
+	...........................551048 lines processed
+#  chr8
+	...........................551915 lines processed
+#  chr9
+	.....................431212 lines processed
+#  chr10
+	........................491971 lines processed
+#  chr11
+	.........................517637 lines processed
+#  chr12
+	......................452229 lines processed
+#  chr13
+	.................341182 lines processed
+#  chr14
+	...............315468 lines processed
+#  chr15
+	..............284675 lines processed
+#  chr16
+	...............309917 lines processed
+#  chr17
+	.............276912 lines processed
+#  chr18
+	.............277716 lines processed
+#  chr19
+	..........218711 lines processed
+#  chr20
+	..........218788 lines processed
+#  chr21
+	......126291 lines processed
+#  chr22
+	......135985 lines processed
+# - Checking finished in 498.4011s
+--------------------------------------------------
+# - Number of SNPs loaded: 57529
+# Run Elastic net regression
+# - Model fitting finised in 2608.8063s
+# Total running time of current lipid: 52.3240m
+# #################### 8 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: Hex2Cer-d18:2-16:0-
+# Processing lipid: Hex2Cer-d18:2-16:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778043 lines processed
+#  chr2
+	..........................................841006 lines processed
+#  chr3
+	..................................690163 lines processed
+#  chr4
+	..................................680225 lines processed
+#  chr5
+	...............................637508 lines processed
+#  chr6
+	..............................614550 lines processed
+#  chr7
+	...........................550839 lines processed
+#  chr8
+	...........................552406 lines processed
+#  chr9
+	.....................430901 lines processed
+#  chr10
+	........................492009 lines processed
+#  chr11
+	.........................517231 lines processed
+#  chr12
+	......................451861 lines processed
+#  chr13
+	.................341531 lines processed
+#  chr14
+	...............315032 lines processed
+#  chr15
+	..............284890 lines processed
+#  chr16
+	...............310352 lines processed
+#  chr17
+	.............276950 lines processed
+#  chr18
+	.............277960 lines processed
+#  chr19
+	..........219422 lines processed
+#  chr20
+	..........217897 lines processed
+#  chr21
+	......126736 lines processed
+#  chr22
+	......135583 lines processed
+# - Checking finished in 505.5318s
+--------------------------------------------------
+# - Number of SNPs loaded: 53583
+# Run Elastic net regression
+# - Model fitting finised in 2583.9023s
+# Total running time of current lipid: 51.9886m
+# #################### 9 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: Hex2Cer-d18:2-18:0-
+# Processing lipid: Hex2Cer-d18:2-18:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778168 lines processed
+#  chr2
+	..........................................841452 lines processed
+#  chr3
+	..................................688509 lines processed
+#  chr4
+	..................................680303 lines processed
+#  chr5
+	...............................637421 lines processed
+#  chr6
+	..............................614311 lines processed
+#  chr7
+	...........................550563 lines processed
+#  chr8
+	...........................552680 lines processed
+#  chr9
+	.....................431232 lines processed
+#  chr10
+	........................491775 lines processed
+#  chr11
+	.........................517637 lines processed
+#  chr12
+	......................452128 lines processed
+#  chr13
+	.................341300 lines processed
+#  chr14
+	...............314726 lines processed
+#  chr15
+	..............284890 lines processed
+#  chr16
+	...............310745 lines processed
+#  chr17
+	.............276747 lines processed
+#  chr18
+	.............277887 lines processed
+#  chr19
+	..........219422 lines processed
+#  chr20
+	..........218669 lines processed
+#  chr21
+	......124298 lines processed
+#  chr22
+	......136010 lines processed
+# - Checking finished in 402.6100s
+--------------------------------------------------
+# - Number of SNPs loaded: 43585
+# Run Elastic net regression
+# - Model fitting finised in 2319.0691s
+# Total running time of current lipid: 45.7676m
+# #################### 10 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: Hex2Cer-d18:2-24:1-
+# Processing lipid: Hex2Cer-d18:2-24:1-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778294 lines processed
+#  chr2
+	..........................................841679 lines processed
+#  chr3
+	..................................690547 lines processed
+#  chr4
+	..................................680225 lines processed
+#  chr5
+	...............................637684 lines processed
+#  chr6
+	..............................614042 lines processed
+#  chr7
+	...........................551048 lines processed
+#  chr8
+	...........................551915 lines processed
+#  chr9
+	.....................431014 lines processed
+#  chr10
+	........................491971 lines processed
+#  chr11
+	.........................516672 lines processed
+#  chr12
+	......................451794 lines processed
+#  chr13
+	.................341685 lines processed
+#  chr14
+	...............314847 lines processed
+#  chr15
+	..............284890 lines processed
+#  chr16
+	...............310294 lines processed
+#  chr17
+	.............276890 lines processed
+#  chr18
+	.............277960 lines processed
+#  chr19
+	..........219422 lines processed
+#  chr20
+	..........218845 lines processed
+#  chr21
+	......122383 lines processed
+#  chr22
+	......135985 lines processed
+# - Checking finished in 482.0260s
+--------------------------------------------------
+# - Number of SNPs loaded: 50580
+# Run Elastic net regression
+# - Model fitting finised in 2417.5668s
+# Total running time of current lipid: 48.7213m
+# #################### 11 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: Hex3Cer-d18:1-16:0-
+# Processing lipid: Hex3Cer-d18:1-16:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778295 lines processed
+#  chr2
+	..........................................840766 lines processed
+#  chr3
+	..................................689898 lines processed
+#  chr4
+	..................................680240 lines processed
+#  chr5
+	...............................637689 lines processed
+#  chr6
+	..............................614648 lines processed
+#  chr7
+	...........................551068 lines processed
+#  chr8
+	...........................552679 lines processed
+#  chr9
+	.....................431182 lines processed
+#  chr10
+	........................492018 lines processed
+#  chr11
+	.........................517692 lines processed
+#  chr12
+	......................451812 lines processed
+#  chr13
+	.................341709 lines processed
+#  chr14
+	...............315291 lines processed
+#  chr15
+	..............285042 lines processed
+#  chr16
+	...............307249 lines processed
+#  chr17
+	.............276667 lines processed
+#  chr18
+	.............276159 lines processed
+#  chr19
+	..........218813 lines processed
+#  chr20
+	..........218687 lines processed
+#  chr21
+	......126557 lines processed
+#  chr22
+	......135668 lines processed
+# - Checking finished in 414.0346s
+--------------------------------------------------
+# - Number of SNPs loaded: 44168
+# Run Elastic net regression
+# - Model fitting finised in 2011.0474s
+# Total running time of current lipid: 40.8283m
+# #################### 12 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: Hex3Cer-d18:1-18:0-
+# Processing lipid: Hex3Cer-d18:1-18:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................777987 lines processed
+#  chr2
+	..........................................841345 lines processed
+#  chr3
+	..................................690786 lines processed
+#  chr4
+	.................................679962 lines processed
+#  chr5
+	...............................637656 lines processed
+#  chr6
+	..............................614573 lines processed
+#  chr7
+	...........................549355 lines processed
+#  chr8
+	...........................552233 lines processed
+#  chr9
+	.....................430913 lines processed
+#  chr10
+	........................492035 lines processed
+#  chr11
+	.........................517604 lines processed
+#  chr12
+	......................452294 lines processed
+#  chr13
+	.................341123 lines processed
+#  chr14
+	...............314801 lines processed
+#  chr15
+	..............284485 lines processed
+#  chr16
+	...............310549 lines processed
+#  chr17
+	.............276261 lines processed
+#  chr18
+	.............277860 lines processed
+#  chr19
+	..........219359 lines processed
+#  chr20
+	..........218721 lines processed
+#  chr21
+	......126674 lines processed
+#  chr22
+	......135995 lines processed
+# - Checking finished in 403.6342s
+--------------------------------------------------
+# - Number of SNPs loaded: 44334
+# Run Elastic net regression
+# - Model fitting finised in 2209.6858s
+# Total running time of current lipid: 43.9682m
+# #################### 13 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: Hex3Cer-d18:1-20:0-
+# Processing lipid: Hex3Cer-d18:1-20:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................776418 lines processed
+#  chr2
+	..........................................841511 lines processed
+#  chr3
+	..................................690871 lines processed
+#  chr4
+	.................................679560 lines processed
+#  chr5
+	...............................637640 lines processed
+#  chr6
+	..............................614570 lines processed
+#  chr7
+	...........................551036 lines processed
+#  chr8
+	...........................551727 lines processed
+#  chr9
+	.....................431207 lines processed
+#  chr10
+	........................492043 lines processed
+#  chr11
+	.........................517480 lines processed
+#  chr12
+	......................451934 lines processed
+#  chr13
+	................339719 lines processed
+#  chr14
+	...............315170 lines processed
+#  chr15
+	..............284733 lines processed
+#  chr16
+	...............309863 lines processed
+#  chr17
+	.............276502 lines processed
+#  chr18
+	.............277799 lines processed
+#  chr19
+	..........219270 lines processed
+#  chr20
+	..........218150 lines processed
+#  chr21
+	......126155 lines processed
+#  chr22
+	......136019 lines processed
+# - Checking finished in 410.2390s
+--------------------------------------------------
+# - Number of SNPs loaded: 48859
+# Run Elastic net regression
+# - Model fitting finised in 2414.2462s
+# Total running time of current lipid: 47.5347m
+# #################### 14 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: Hex3Cer-d18:1-22:0-
+# Processing lipid: Hex3Cer-d18:1-22:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778342 lines processed
+#  chr2
+	..........................................841415 lines processed
+#  chr3
+	..................................690940 lines processed
+#  chr4
+	..................................680332 lines processed
+#  chr5
+	...............................637053 lines processed
+#  chr6
+	..............................613796 lines processed
+#  chr7
+	...........................551054 lines processed
+#  chr8
+	...........................547737 lines processed
+#  chr9
+	.....................431192 lines processed
+#  chr10
+	........................492022 lines processed
+#  chr11
+	.........................517480 lines processed
+#  chr12
+	......................451934 lines processed
+#  chr13
+	.................341123 lines processed
+#  chr14
+	...............314872 lines processed
+#  chr15
+	..............284733 lines processed
+#  chr16
+	...............309989 lines processed
+#  chr17
+	.............276058 lines processed
+#  chr18
+	.............277426 lines processed
+#  chr19
+	..........219270 lines processed
+#  chr20
+	..........218956 lines processed
+#  chr21
+	......125577 lines processed
+#  chr22
+	......135919 lines processed
+# - Checking finished in 371.0739s
+--------------------------------------------------
+# - Number of SNPs loaded: 38328
+# Run Elastic net regression
+# - Model fitting finised in 1153.6908s
+# Total running time of current lipid: 25.7140m
+# #################### 15 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: Hex3Cer-d18:1-24:0-
+# Processing lipid: Hex3Cer-d18:1-24:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778342 lines processed
+#  chr2
+	..........................................840296 lines processed
+#  chr3
+	..................................690940 lines processed
+#  chr4
+	..................................680302 lines processed
+#  chr5
+	...............................637053 lines processed
+#  chr6
+	..............................613975 lines processed
+#  chr7
+	...........................550742 lines processed
+#  chr8
+	...........................552641 lines processed
+#  chr9
+	.....................431152 lines processed
+#  chr10
+	........................491708 lines processed
+#  chr11
+	.........................517613 lines processed
+#  chr12
+	......................452094 lines processed
+#  chr13
+	.................341738 lines processed
+#  chr14
+	...............315364 lines processed
+#  chr15
+	..............284744 lines processed
+#  chr16
+	...............309344 lines processed
+#  chr17
+	.............276950 lines processed
+#  chr18
+	.............277771 lines processed
+#  chr19
+	..........219270 lines processed
+#  chr20
+	..........218962 lines processed
+#  chr21
+	......126694 lines processed
+#  chr22
+	......135774 lines processed
+# - Checking finished in 476.0703s
+--------------------------------------------------
+# - Number of SNPs loaded: 45422
+# Run Elastic net regression
+# - Model fitting finised in 1944.0677s
+# Total running time of current lipid: 40.7572m
+# #################### 16 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: Hex3Cer-d18:1-24:1-
+# Processing lipid: Hex3Cer-d18:1-24:1-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................777747 lines processed
+#  chr2
+	..........................................841675 lines processed
+#  chr3
+	..................................689804 lines processed
+#  chr4
+	..................................680319 lines processed
+#  chr5
+	...............................637053 lines processed
+#  chr6
+	..............................614382 lines processed
+#  chr7
+	...........................550682 lines processed
+#  chr8
+	...........................552141 lines processed
+#  chr9
+	.....................431108 lines processed
+#  chr10
+	........................492064 lines processed
+#  chr11
+	.........................516140 lines processed
+#  chr12
+	......................451812 lines processed
+#  chr13
+	.................340129 lines processed
+#  chr14
+	...............313919 lines processed
+#  chr15
+	..............283722 lines processed
+#  chr16
+	...............309989 lines processed
+#  chr17
+	.............276347 lines processed
+#  chr18
+	.............277819 lines processed
+#  chr19
+	..........219270 lines processed
+#  chr20
+	..........218956 lines processed
+#  chr21
+	......126674 lines processed
+#  chr22
+	......135687 lines processed
+# - Checking finished in 358.7446s
+--------------------------------------------------
+# - Number of SNPs loaded: 40747
+# Run Elastic net regression
+# - Model fitting finised in 2522.9981s
+# Total running time of current lipid: 48.4077m
+# #################### 17 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: GM3-d18:1-16:0-
+# Processing lipid: GM3-d18:1-16:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778163 lines processed
+#  chr2
+	..........................................841556 lines processed
+#  chr3
+	..................................690087 lines processed
+#  chr4
+	.................................679334 lines processed
+#  chr5
+	...............................637053 lines processed
+#  chr6
+	..............................614443 lines processed
+#  chr7
+	...........................546159 lines processed
+#  chr8
+	...........................550171 lines processed
+#  chr9
+	.....................431259 lines processed
+#  chr10
+	........................491837 lines processed
+#  chr11
+	.........................517756 lines processed
+#  chr12
+	......................451812 lines processed
+#  chr13
+	.................341699 lines processed
+#  chr14
+	...............315468 lines processed
+#  chr15
+	..............285042 lines processed
+#  chr16
+	...............309690 lines processed
+#  chr17
+	.............276952 lines processed
+#  chr18
+	.............277325 lines processed
+#  chr19
+	..........218584 lines processed
+#  chr20
+	..........218791 lines processed
+#  chr21
+	......126585 lines processed
+#  chr22
+	......135837 lines processed
+# - Checking finished in 347.3240s
+--------------------------------------------------
+# - Number of SNPs loaded: 38279
+# Run Elastic net regression
+# - Model fitting finised in 2733.0188s
+# Total running time of current lipid: 51.6372m
+# #################### 18 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: GM3-d18:1-18:0-
+# Processing lipid: GM3-d18:1-18:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................777684 lines processed
+#  chr2
+	..........................................841647 lines processed
+#  chr3
+	..................................689176 lines processed
+#  chr4
+	.................................679588 lines processed
+#  chr5
+	...............................637493 lines processed
+#  chr6
+	..............................614370 lines processed
+#  chr7
+	...........................550469 lines processed
+#  chr8
+	...........................550501 lines processed
+#  chr9
+	.....................431259 lines processed
+#  chr10
+	........................491680 lines processed
+#  chr11
+	.........................516672 lines processed
+#  chr12
+	......................451812 lines processed
+#  chr13
+	.................341522 lines processed
+#  chr14
+	...............313575 lines processed
+#  chr15
+	..............285042 lines processed
+#  chr16
+	...............310721 lines processed
+#  chr17
+	.............276879 lines processed
+#  chr18
+	.............276295 lines processed
+#  chr19
+	..........218723 lines processed
+#  chr20
+	..........218856 lines processed
+#  chr21
+	......124863 lines processed
+#  chr22
+	......135667 lines processed
+# - Checking finished in 395.1248s
+--------------------------------------------------
+# - Number of SNPs loaded: 28646
+# Run Elastic net regression
+# - Model fitting finised in 1483.4593s
+# Total running time of current lipid: 31.5777m
+# #################### 19 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: GM3-d18:1-20:0-
+# Processing lipid: GM3-d18:1-20:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778317 lines processed
+#  chr2
+	..........................................841735 lines processed
+#  chr3
+	..................................691223 lines processed
+#  chr4
+	..................................680266 lines processed
+#  chr5
+	...............................637199 lines processed
+#  chr6
+	..............................614486 lines processed
+#  chr7
+	...........................550767 lines processed
+#  chr8
+	...........................552193 lines processed
+#  chr9
+	.....................431192 lines processed
+#  chr10
+	........................491727 lines processed
+#  chr11
+	.........................517236 lines processed
+#  chr12
+	......................452346 lines processed
+#  chr13
+	.................341744 lines processed
+#  chr14
+	...............314806 lines processed
+#  chr15
+	..............284986 lines processed
+#  chr16
+	...............310741 lines processed
+#  chr17
+	.............274013 lines processed
+#  chr18
+	.............277595 lines processed
+#  chr19
+	..........219095 lines processed
+#  chr20
+	..........218433 lines processed
+#  chr21
+	......125759 lines processed
+#  chr22
+	......135649 lines processed
+# - Checking finished in 352.1388s
+--------------------------------------------------
+# - Number of SNPs loaded: 44214
+# Run Elastic net regression
+# - Model fitting finised in 2764.5004s
+# Total running time of current lipid: 52.3540m
+# #################### 20 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: GM3-d18:1-22:0-
+# Processing lipid: GM3-d18:1-22:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778292 lines processed
+#  chr2
+	..........................................841256 lines processed
+#  chr3
+	..................................691152 lines processed
+#  chr4
+	..................................680192 lines processed
+#  chr5
+	...............................637541 lines processed
+#  chr6
+	..............................614486 lines processed
+#  chr7
+	...........................550742 lines processed
+#  chr8
+	...........................552641 lines processed
+#  chr9
+	.....................431014 lines processed
+#  chr10
+	........................491708 lines processed
+#  chr11
+	.........................517614 lines processed
+#  chr12
+	......................452346 lines processed
+#  chr13
+	.................341445 lines processed
+#  chr14
+	...............315289 lines processed
+#  chr15
+	..............283281 lines processed
+#  chr16
+	...............310741 lines processed
+#  chr17
+	.............276941 lines processed
+#  chr18
+	.............277851 lines processed
+#  chr19
+	..........218141 lines processed
+#  chr20
+	..........218936 lines processed
+#  chr21
+	......126694 lines processed
+#  chr22
+	......135649 lines processed
+# - Checking finished in 388.7087s
+--------------------------------------------------
+# - Number of SNPs loaded: 55774
+# Run Elastic net regression
+# - Model fitting finised in 2786.5018s
+# Total running time of current lipid: 53.4403m
+# #################### 21 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: GM3-d18:1-24:0-
+# Processing lipid: GM3-d18:1-24:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778245 lines processed
+#  chr2
+	..........................................841550 lines processed
+#  chr3
+	..................................691217 lines processed
+#  chr4
+	..................................680326 lines processed
+#  chr5
+	...............................637541 lines processed
+#  chr6
+	..............................614486 lines processed
+#  chr7
+	...........................551079 lines processed
+#  chr8
+	...........................551886 lines processed
+#  chr9
+	.....................431192 lines processed
+#  chr10
+	........................492047 lines processed
+#  chr11
+	.........................517739 lines processed
+#  chr12
+	......................452346 lines processed
+#  chr13
+	.................341445 lines processed
+#  chr14
+	...............315229 lines processed
+#  chr15
+	..............284607 lines processed
+#  chr16
+	...............310741 lines processed
+#  chr17
+	.............276845 lines processed
+#  chr18
+	.............277622 lines processed
+#  chr19
+	..........219282 lines processed
+#  chr20
+	..........218936 lines processed
+#  chr21
+	......126470 lines processed
+#  chr22
+	......135993 lines processed
+# - Checking finished in 426.6907s
+--------------------------------------------------
+# - Number of SNPs loaded: 76799
+# Run Elastic net regression
+# - Model fitting finised in 3837.6821s
+# Total running time of current lipid: 71.7886m
+# #################### 22 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: GM3-d18:1-24:1-
+# Processing lipid: GM3-d18:1-24:1-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................777198 lines processed
+#  chr2
+	..........................................841550 lines processed
+#  chr3
+	..................................689717 lines processed
+#  chr4
+	.................................679633 lines processed
+#  chr5
+	...............................637429 lines processed
+#  chr6
+	..............................614280 lines processed
+#  chr7
+	...........................550033 lines processed
+#  chr8
+	...........................552626 lines processed
+#  chr9
+	.....................428428 lines processed
+#  chr10
+	........................492045 lines processed
+#  chr11
+	.........................517027 lines processed
+#  chr12
+	......................451141 lines processed
+#  chr13
+	.................341566 lines processed
+#  chr14
+	...............315468 lines processed
+#  chr15
+	..............284752 lines processed
+#  chr16
+	...............309229 lines processed
+#  chr17
+	.............276940 lines processed
+#  chr18
+	.............277851 lines processed
+#  chr19
+	..........217671 lines processed
+#  chr20
+	..........218685 lines processed
+#  chr21
+	.....119465 lines processed
+#  chr22
+	......134646 lines processed
+# - Checking finished in 399.3630s
+--------------------------------------------------
+# - Number of SNPs loaded: 28090
+# Run Elastic net regression
+# - Model fitting finised in 1668.3347s
+# Total running time of current lipid: 34.7255m
+# #################### 23 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: GM3-d18:2-24:1-
+# Processing lipid: GM3-d18:2-24:1-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................775504 lines processed
+#  chr2
+	..........................................841310 lines processed
+#  chr3
+	..................................690319 lines processed
+#  chr4
+	.................................678195 lines processed
+#  chr5
+	...............................636508 lines processed
+#  chr6
+	..............................611983 lines processed
+#  chr7
+	...........................551028 lines processed
+#  chr8
+	...........................552682 lines processed
+#  chr9
+	.....................430851 lines processed
+#  chr10
+	........................492045 lines processed
+#  chr11
+	.........................517756 lines processed
+#  chr12
+	......................450464 lines processed
+#  chr13
+	.................341439 lines processed
+#  chr14
+	...............314530 lines processed
+#  chr15
+	..............283527 lines processed
+#  chr16
+	...............310274 lines processed
+#  chr17
+	.............276684 lines processed
+#  chr18
+	.............277943 lines processed
+#  chr19
+	..........219155 lines processed
+#  chr20
+	..........218709 lines processed
+#  chr21
+	......126585 lines processed
+#  chr22
+	......135974 lines processed
+# - Checking finished in 543.5024s
+--------------------------------------------------
+# - Number of SNPs loaded: 41753
+# Run Elastic net regression
+# - Model fitting finised in 1970.3016s
+# Total running time of current lipid: 42.2311m
+# #################### 24 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: GD1-d18:1-24:1-
+# Processing lipid: GD1-d18:1-24:1-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778079 lines processed
+#  chr2
+	.........................................838610 lines processed
+#  chr3
+	..................................689925 lines processed
+#  chr4
+	..................................680192 lines processed
+#  chr5
+	...............................637297 lines processed
+#  chr6
+	..............................614573 lines processed
+#  chr7
+	...........................550563 lines processed
+#  chr8
+	...........................550839 lines processed
+#  chr9
+	.....................430133 lines processed
+#  chr10
+	........................491777 lines processed
+#  chr11
+	.........................517637 lines processed
+#  chr12
+	......................451828 lines processed
+#  chr13
+	.................341678 lines processed
+#  chr14
+	...............314315 lines processed
+#  chr15
+	..............284853 lines processed
+#  chr16
+	...............310747 lines processed
+#  chr17
+	.............276849 lines processed
+#  chr18
+	.............276973 lines processed
+#  chr19
+	..........218578 lines processed
+#  chr20
+	..........218825 lines processed
+#  chr21
+	......126507 lines processed
+#  chr22
+	......136002 lines processed
+# - Checking finished in 512.2597s
+--------------------------------------------------
+# - Number of SNPs loaded: 48335
+# Run Elastic net regression
+# - Model fitting finised in 2607.2213s
+# Total running time of current lipid: 52.4419m
+# #################### 25 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: SHexCer-d18:1-16:0-OH--
+# Processing lipid: SHexCer-d18:1-16:0-OH--
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778338 lines processed
+#  chr2
+	..........................................841677 lines processed
+#  chr3
+	..................................691127 lines processed
+#  chr4
+	.................................679541 lines processed
+#  chr5
+	...............................636652 lines processed
+#  chr6
+	..............................613178 lines processed
+#  chr7
+	...........................549450 lines processed
+#  chr8
+	...........................552619 lines processed
+#  chr9
+	.....................429107 lines processed
+#  chr10
+	........................492046 lines processed
+#  chr11
+	.........................514883 lines processed
+#  chr12
+	......................452338 lines processed
+#  chr13
+	.................341478 lines processed
+#  chr14
+	...............315204 lines processed
+#  chr15
+	..............284323 lines processed
+#  chr16
+	...............309086 lines processed
+#  chr17
+	.............276950 lines processed
+#  chr18
+	.............278001 lines processed
+#  chr19
+	..........219335 lines processed
+#  chr20
+	..........217672 lines processed
+#  chr21
+	......126732 lines processed
+#  chr22
+	......135601 lines processed
+# - Checking finished in 561.7850s
+--------------------------------------------------
+# - Number of SNPs loaded: 46853
+# Run Elastic net regression
+# - Model fitting finised in 2406.3803s
+# Total running time of current lipid: 49.8340m
+# #################### 26 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: SHexCer-d18:1-16:0-
+# Processing lipid: SHexCer-d18:1-16:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778000 lines processed
+#  chr2
+	..........................................841683 lines processed
+#  chr3
+	..................................691150 lines processed
+#  chr4
+	..................................680175 lines processed
+#  chr5
+	...............................636016 lines processed
+#  chr6
+	..............................613025 lines processed
+#  chr7
+	...........................549786 lines processed
+#  chr8
+	...........................552609 lines processed
+#  chr9
+	.....................430445 lines processed
+#  chr10
+	........................491834 lines processed
+#  chr11
+	.........................516945 lines processed
+#  chr12
+	......................451529 lines processed
+#  chr13
+	.................341153 lines processed
+#  chr14
+	...............315367 lines processed
+#  chr15
+	..............284787 lines processed
+#  chr16
+	...............309576 lines processed
+#  chr17
+	.............276502 lines processed
+#  chr18
+	.............278001 lines processed
+#  chr19
+	..........217694 lines processed
+#  chr20
+	..........218333 lines processed
+#  chr21
+	......126508 lines processed
+#  chr22
+	......134448 lines processed
+# - Checking finished in 644.2871s
+--------------------------------------------------
+# - Number of SNPs loaded: 34526
+# Run Elastic net regression
+# - Model fitting finised in 2026.7674s
+# Total running time of current lipid: 44.7878m
+# #################### 27 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: SHexCer-d18:1-24:0-OH--
+# Processing lipid: SHexCer-d18:1-24:0-OH--
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778118 lines processed
+#  chr2
+	..........................................841698 lines processed
+#  chr3
+	..................................691150 lines processed
+#  chr4
+	.................................679624 lines processed
+#  chr5
+	...............................637428 lines processed
+#  chr6
+	..............................614456 lines processed
+#  chr7
+	...........................550924 lines processed
+#  chr8
+	...........................552225 lines processed
+#  chr9
+	.....................431285 lines processed
+#  chr10
+	........................492053 lines processed
+#  chr11
+	.........................517465 lines processed
+#  chr12
+	......................452231 lines processed
+#  chr13
+	.................341768 lines processed
+#  chr14
+	...............315346 lines processed
+#  chr15
+	..............284987 lines processed
+#  chr16
+	...............310307 lines processed
+#  chr17
+	.............276857 lines processed
+#  chr18
+	.............277960 lines processed
+#  chr19
+	..........218838 lines processed
+#  chr20
+	..........218649 lines processed
+#  chr21
+	......125614 lines processed
+#  chr22
+	......135812 lines processed
+# - Checking finished in 400.5779s
+--------------------------------------------------
+# - Number of SNPs loaded: 44261
+# Run Elastic net regression
+# - Model fitting finised in 2317.2972s
+# Total running time of current lipid: 45.7110m
+# #################### 28 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: SHexCer-d18:1-24:0-
+# Processing lipid: SHexCer-d18:1-24:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................777952 lines processed
+#  chr2
+	..........................................841320 lines processed
+#  chr3
+	..................................690976 lines processed
+#  chr4
+	.................................679762 lines processed
+#  chr5
+	...............................637641 lines processed
+#  chr6
+	..............................614458 lines processed
+#  chr7
+	...........................550443 lines processed
+#  chr8
+	...........................552163 lines processed
+#  chr9
+	.....................431235 lines processed
+#  chr10
+	........................491964 lines processed
+#  chr11
+	.........................517624 lines processed
+#  chr12
+	......................452076 lines processed
+#  chr13
+	.................341474 lines processed
+#  chr14
+	...............314822 lines processed
+#  chr15
+	..............284150 lines processed
+#  chr16
+	...............310687 lines processed
+#  chr17
+	.............276338 lines processed
+#  chr18
+	.............278072 lines processed
+#  chr19
+	..........218298 lines processed
+#  chr20
+	..........218763 lines processed
+#  chr21
+	......124570 lines processed
+#  chr22
+	......135993 lines processed
+# - Checking finished in 416.1715s
+--------------------------------------------------
+# - Number of SNPs loaded: 58092
+# Run Elastic net regression
+# - Model fitting finised in 3240.4173s
+# Total running time of current lipid: 61.4981m
+# #################### 29 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: SHexCer-d18:1-24:1-OH--
+# Processing lipid: SHexCer-d18:1-24:1-OH--
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................777530 lines processed
+#  chr2
+	..........................................841735 lines processed
+#  chr3
+	..................................689948 lines processed
+#  chr4
+	.................................679624 lines processed
+#  chr5
+	...............................637382 lines processed
+#  chr6
+	..............................614042 lines processed
+#  chr7
+	...........................549458 lines processed
+#  chr8
+	...........................550737 lines processed
+#  chr9
+	.....................431110 lines processed
+#  chr10
+	........................492025 lines processed
+#  chr11
+	.........................517694 lines processed
+#  chr12
+	......................451971 lines processed
+#  chr13
+	.................341695 lines processed
+#  chr14
+	...............314726 lines processed
+#  chr15
+	..............284890 lines processed
+#  chr16
+	...............310675 lines processed
+#  chr17
+	.............276747 lines processed
+#  chr18
+	.............277960 lines processed
+#  chr19
+	..........217042 lines processed
+#  chr20
+	..........218402 lines processed
+#  chr21
+	......125816 lines processed
+#  chr22
+	......135822 lines processed
+# - Checking finished in 407.4590s
+--------------------------------------------------
+# - Number of SNPs loaded: 46613
+# Run Elastic net regression
+# - Model fitting finised in 2449.5211s
+# Total running time of current lipid: 48.0497m
+# #################### 30 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: SHexCer-d18:1-24:1-
+# Processing lipid: SHexCer-d18:1-24:1-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778033 lines processed
+#  chr2
+	..........................................840591 lines processed
+#  chr3
+	..................................691210 lines processed
+#  chr4
+	.................................679983 lines processed
+#  chr5
+	...............................637688 lines processed
+#  chr6
+	..............................614544 lines processed
+#  chr7
+	...........................550956 lines processed
+#  chr8
+	...........................550780 lines processed
+#  chr9
+	.....................431140 lines processed
+#  chr10
+	........................491707 lines processed
+#  chr11
+	.........................517728 lines processed
+#  chr12
+	......................452102 lines processed
+#  chr13
+	.................341391 lines processed
+#  chr14
+	...............315167 lines processed
+#  chr15
+	..............284625 lines processed
+#  chr16
+	...............310501 lines processed
+#  chr17
+	.............276768 lines processed
+#  chr18
+	.............277960 lines processed
+#  chr19
+	..........218965 lines processed
+#  chr20
+	..........218587 lines processed
+#  chr21
+	......126640 lines processed
+#  chr22
+	......135668 lines processed
+# - Checking finished in 413.5288s
+--------------------------------------------------
+# - Number of SNPs loaded: 59773
+# Run Elastic net regression
+# - Model fitting finised in 2998.0136s
+# Total running time of current lipid: 57.4227m
+# #################### 31 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: SM-34:3-
+# Processing lipid: SM-34:3-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778303 lines processed
+#  chr2
+	..........................................841646 lines processed
+#  chr3
+	..................................690749 lines processed
+#  chr4
+	..................................680225 lines processed
+#  chr5
+	...............................637571 lines processed
+#  chr6
+	..............................614042 lines processed
+#  chr7
+	...........................550969 lines processed
+#  chr8
+	...........................552623 lines processed
+#  chr9
+	.....................431128 lines processed
+#  chr10
+	........................492008 lines processed
+#  chr11
+	.........................517740 lines processed
+#  chr12
+	......................452205 lines processed
+#  chr13
+	.................341608 lines processed
+#  chr14
+	...............314829 lines processed
+#  chr15
+	..............284993 lines processed
+#  chr16
+	...............310409 lines processed
+#  chr17
+	.............276747 lines processed
+#  chr18
+	.............277960 lines processed
+#  chr19
+	..........219178 lines processed
+#  chr20
+	..........218939 lines processed
+#  chr21
+	......126706 lines processed
+#  chr22
+	......135983 lines processed
+# - Checking finished in 641.4235s
+--------------------------------------------------
+# - Number of SNPs loaded: 102730
+# Run Elastic net regression
+^[[B    # - Model fitting finised in 5421.8282s
+# Total running time of current lipid: 101.8492m
+# #################### 32 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: SM-35:2-
+# Processing lipid: SM-35:2-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778079 lines processed
+#  chr2
+	..........................................841732 lines processed
+#  chr3
+	..................................691081 lines processed
+#  chr4
+	..................................680225 lines processed
+#  chr5
+	...............................637331 lines processed
+#  chr6
+	..............................614573 lines processed
+#  chr7
+	...........................550839 lines processed
+#  chr8
+	...........................551915 lines processed
+#  chr9
+	.....................431212 lines processed
+#  chr10
+	........................491855 lines processed
+#  chr11
+	.........................517637 lines processed
+#  chr12
+	......................451746 lines processed
+#  chr13
+	.................341182 lines processed
+#  chr14
+	...............315151 lines processed
+#  chr15
+	..............284699 lines processed
+#  chr16
+	...............310734 lines processed
+#  chr17
+	.............276533 lines processed
+#  chr18
+	.............277960 lines processed
+#  chr19
+	..........218831 lines processed
+#  chr20
+	..........218669 lines processed
+#  chr21
+	......126512 lines processed
+#  chr22
+	......135886 lines processed
+# - Checking finished in 422.2788s
+--------------------------------------------------
+# - Number of SNPs loaded: 50161
+# Run Elastic net regression
+# - Model fitting finised in 3034.8936s
+# Total running time of current lipid: 58.0863m
+# #################### 33 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: SM-37:1-
+# Processing lipid: SM-37:1-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778164 lines processed
+#  chr2
+	..........................................840917 lines processed
+#  chr3
+	..................................691122 lines processed
+#  chr4
+	..................................680225 lines processed
+#  chr5
+	...............................637410 lines processed
+#  chr6
+	..............................614600 lines processed
+#  chr7
+	...........................550880 lines processed
+#  chr8
+	...........................552623 lines processed
+#  chr9
+	.....................430851 lines processed
+#  chr10
+	........................491638 lines processed
+#  chr11
+	.........................517760 lines processed
+#  chr12
+	......................451977 lines processed
+#  chr13
+	.................341608 lines processed
+#  chr14
+	...............313700 lines processed
+#  chr15
+	..............284730 lines processed
+#  chr16
+	...............310218 lines processed
+#  chr17
+	.............276533 lines processed
+#  chr18
+	.............277960 lines processed
+#  chr19
+	..........219178 lines processed
+#  chr20
+	..........218869 lines processed
+#  chr21
+	......126738 lines processed
+#  chr22
+	......136024 lines processed
+# - Checking finished in 413.4274s
+--------------------------------------------------
+# - Number of SNPs loaded: 70182
+# Run Elastic net regression
+# - Model fitting finised in 3545.9051s
+# Total running time of current lipid: 66.5387m
+# #################### 34 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: SM-37:2-
+# Processing lipid: SM-37:2-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778074 lines processed
+#  chr2
+	..........................................841739 lines processed
+#  chr3
+	..................................691131 lines processed
+#  chr4
+	..................................680225 lines processed
+#  chr5
+	...............................637331 lines processed
+#  chr6
+	..............................614287 lines processed
+#  chr7
+	...........................550839 lines processed
+#  chr8
+	...........................552623 lines processed
+#  chr9
+	.....................429504 lines processed
+#  chr10
+	........................491930 lines processed
+#  chr11
+	.........................517740 lines processed
+#  chr12
+	......................451977 lines processed
+#  chr13
+	.................341783 lines processed
+#  chr14
+	...............314829 lines processed
+#  chr15
+	..............284890 lines processed
+#  chr16
+	...............310272 lines processed
+#  chr17
+	.............276747 lines processed
+#  chr18
+	.............277960 lines processed
+#  chr19
+	..........219178 lines processed
+#  chr20
+	..........218939 lines processed
+#  chr21
+	......126738 lines processed
+#  chr22
+	......135583 lines processed
+# - Checking finished in 610.3147s
+--------------------------------------------------
+# - Number of SNPs loaded: 78421
+# Run Elastic net regression
+# - Model fitting finised in 4025.3524s
+# Total running time of current lipid: 77.9362m
+# #################### 35 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: SM-38:3-
+# Processing lipid: SM-38:3-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................777880 lines processed
+#  chr2
+	..........................................841725 lines processed
+#  chr3
+	..................................690922 lines processed
+#  chr4
+	.................................679945 lines processed
+#  chr5
+	...............................637204 lines processed
+#  chr6
+	..............................614575 lines processed
+#  chr7
+	...........................549925 lines processed
+#  chr8
+	...........................552621 lines processed
+#  chr9
+	.....................431259 lines processed
+#  chr10
+	........................492026 lines processed
+#  chr11
+	.........................517062 lines processed
+#  chr12
+	......................451797 lines processed
+#  chr13
+	.................341136 lines processed
+#  chr14
+	...............314236 lines processed
+#  chr15
+	..............284601 lines processed
+#  chr16
+	...............310725 lines processed
+#  chr17
+	.............276489 lines processed
+#  chr18
+	.............276812 lines processed
+#  chr19
+	..........219172 lines processed
+#  chr20
+	..........218726 lines processed
+#  chr21
+	......126636 lines processed
+#  chr22
+	......135988 lines processed
+# - Checking finished in 624.4700s
+--------------------------------------------------
+# - Number of SNPs loaded: 46270
+# Run Elastic net regression
+# - Model fitting finised in 2261.3521s
+# Total running time of current lipid: 48.4605m
+# #################### 36 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: SM-38:3-
+# Processing lipid: SM-38:3-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................777362 lines processed
+#  chr2
+	..........................................841351 lines processed
+#  chr3
+	..................................691195 lines processed
+#  chr4
+	.................................679004 lines processed
+#  chr5
+	...............................637089 lines processed
+#  chr6
+	..............................614042 lines processed
+#  chr7
+	...........................550987 lines processed
+#  chr8
+	...........................552609 lines processed
+#  chr9
+	.....................431071 lines processed
+#  chr10
+	........................491896 lines processed
+#  chr11
+	.........................517599 lines processed
+#  chr12
+	......................448485 lines processed
+#  chr13
+	.................341073 lines processed
+#  chr14
+	...............314852 lines processed
+#  chr15
+	..............284931 lines processed
+#  chr16
+	...............310288 lines processed
+#  chr17
+	.............276747 lines processed
+#  chr18
+	.............277960 lines processed
+#  chr19
+	..........217492 lines processed
+#  chr20
+	..........217949 lines processed
+#  chr21
+	......125019 lines processed
+#  chr22
+	......135573 lines processed
+# - Checking finished in 410.7417s
+--------------------------------------------------
+# - Number of SNPs loaded: 46469
+# Run Elastic net regression
+# - Model fitting finised in 2144.8238s
+# Total running time of current lipid: 43.0288m
+# #################### 37 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: SM-40:3-
+# Processing lipid: SM-40:3-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................777875 lines processed
+#  chr2
+	..........................................841415 lines processed
+#  chr3
+	..................................690871 lines processed
+#  chr4
+	..................................680196 lines processed
+#  chr5
+	...............................637242 lines processed
+#  chr6
+	..............................614294 lines processed
+#  chr7
+	...........................551036 lines processed
+#  chr8
+	...........................552527 lines processed
+#  chr9
+	.....................431259 lines processed
+#  chr10
+	........................491568 lines processed
+#  chr11
+	.........................517610 lines processed
+#  chr12
+	......................452222 lines processed
+#  chr13
+	.................341362 lines processed
+#  chr14
+	...............315453 lines processed
+#  chr15
+	..............284733 lines processed
+#  chr16
+	...............310686 lines processed
+#  chr17
+	.............276058 lines processed
+#  chr18
+	.............277933 lines processed
+#  chr19
+	..........219211 lines processed
+#  chr20
+	..........218673 lines processed
+#  chr21
+	......126367 lines processed
+#  chr22
+	......135985 lines processed
+# - Checking finished in 423.0940s
+--------------------------------------------------
+# - Number of SNPs loaded: 60810
+# Run Elastic net regression
+# - Model fitting finised in 3185.7494s
+# Total running time of current lipid: 60.7323m
+# #################### 38 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: SM-40:3-
+# Processing lipid: SM-40:3-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................777973 lines processed
+#  chr2
+	..........................................841351 lines processed
+#  chr3
+	..................................691152 lines processed
+#  chr4
+	.................................679715 lines processed
+#  chr5
+	...............................637582 lines processed
+#  chr6
+	..............................613164 lines processed
+#  chr7
+	...........................550946 lines processed
+#  chr8
+	...........................552621 lines processed
+#  chr9
+	.....................431071 lines processed
+#  chr10
+	........................491551 lines processed
+#  chr11
+	.........................517740 lines processed
+#  chr12
+	......................452350 lines processed
+#  chr13
+	.................341073 lines processed
+#  chr14
+	...............314829 lines processed
+#  chr15
+	..............284756 lines processed
+#  chr16
+	...............310288 lines processed
+#  chr17
+	.............276809 lines processed
+#  chr18
+	.............277960 lines processed
+#  chr19
+	..........219425 lines processed
+#  chr20
+	..........218939 lines processed
+#  chr21
+	......125350 lines processed
+#  chr22
+	......136024 lines processed
+# - Checking finished in 562.5128s
+--------------------------------------------------
+# - Number of SNPs loaded: 71704
+# Run Elastic net regression
+# - Model fitting finised in 3124.2081s
+# Total running time of current lipid: 62.0016m
+# #################### 39 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: SM-40:4-
+# Processing lipid: SM-40:4-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................776829 lines processed
+#  chr2
+	..........................................841729 lines processed
+#  chr3
+	..................................690922 lines processed
+#  chr4
+	..................................680007 lines processed
+#  chr5
+	...............................637599 lines processed
+#  chr6
+	..............................614122 lines processed
+#  chr7
+	...........................551014 lines processed
+#  chr8
+	...........................552562 lines processed
+#  chr9
+	.....................431259 lines processed
+#  chr10
+	........................492026 lines processed
+#  chr11
+	.........................517696 lines processed
+#  chr12
+	......................451819 lines processed
+#  chr13
+	.................341136 lines processed
+#  chr14
+	...............314252 lines processed
+#  chr15
+	..............284939 lines processed
+#  chr16
+	...............310211 lines processed
+#  chr17
+	.............276728 lines processed
+#  chr18
+	.............277933 lines processed
+#  chr19
+	..........219172 lines processed
+#  chr20
+	..........217957 lines processed
+#  chr21
+	......126530 lines processed
+#  chr22
+	......135985 lines processed
+# - Checking finished in 416.1048s
+--------------------------------------------------
+# - Number of SNPs loaded: 58693
+# Run Elastic net regression
+# - Model fitting finised in 2353.7643s
+# Total running time of current lipid: 46.7100m
+# #################### 40 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: SM-41:0-
+# Processing lipid: SM-41:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778277 lines processed
+#  chr2
+	..........................................841039 lines processed
+#  chr3
+	..................................691176 lines processed
+#  chr4
+	..................................680206 lines processed
+#  chr5
+	...............................637551 lines processed
+#  chr6
+	..............................614466 lines processed
+#  chr7
+	...........................550870 lines processed
+#  chr8
+	...........................552519 lines processed
+#  chr9
+	.....................431193 lines processed
+#  chr10
+	........................491969 lines processed
+#  chr11
+	.........................517686 lines processed
+#  chr12
+	......................452156 lines processed
+#  chr13
+	.................341745 lines processed
+#  chr14
+	...............313486 lines processed
+#  chr15
+	..............284504 lines processed
+#  chr16
+	...............310073 lines processed
+#  chr17
+	.............276927 lines processed
+#  chr18
+	.............277407 lines processed
+#  chr19
+	..........219282 lines processed
+#  chr20
+	..........218476 lines processed
+#  chr21
+	......126747 lines processed
+#  chr22
+	......136018 lines processed
+# - Checking finished in 629.2777s
+--------------------------------------------------
+# - Number of SNPs loaded: 44199
+# Run Elastic net regression
+# - Model fitting finised in 2957.7641s
+# Total running time of current lipid: 60.1271m
+# #################### 41 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: SM-41:1-
+# Processing lipid: SM-41:1-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778231 lines processed
+#  chr2
+	..........................................841736 lines processed
+#  chr3
+	..................................691122 lines processed
+#  chr4
+	.................................679751 lines processed
+#  chr5
+	...............................637090 lines processed
+#  chr6
+	..............................614186 lines processed
+#  chr7
+	...........................550752 lines processed
+#  chr8
+	...........................552195 lines processed
+#  chr9
+	.....................431027 lines processed
+#  chr10
+	........................491921 lines processed
+#  chr11
+	.........................517753 lines processed
+#  chr12
+	......................451916 lines processed
+#  chr13
+	.................341777 lines processed
+#  chr14
+	...............314541 lines processed
+#  chr15
+	..............284773 lines processed
+#  chr16
+	...............310607 lines processed
+#  chr17
+	.............276927 lines processed
+#  chr18
+	.............277237 lines processed
+#  chr19
+	..........219422 lines processed
+#  chr20
+	..........218581 lines processed
+#  chr21
+	......124973 lines processed
+#  chr22
+	......136024 lines processed
+# - Checking finished in 634.1731s
+--------------------------------------------------
+# - Number of SNPs loaded: 52705
+# Run Elastic net regression
+# - Model fitting finised in 2600.1886s
+# Total running time of current lipid: 54.3271m
+# #################### 42 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: SM-42:3-
+# Processing lipid: SM-42:3-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778043 lines processed
+#  chr2
+	..........................................841310 lines processed
+#  chr3
+	..................................691081 lines processed
+#  chr4
+	..................................680225 lines processed
+#  chr5
+	...............................637331 lines processed
+#  chr6
+	..............................614443 lines processed
+#  chr7
+	...........................551014 lines processed
+#  chr8
+	...........................552339 lines processed
+#  chr9
+	.....................431014 lines processed
+#  chr10
+	........................492045 lines processed
+#  chr11
+	.........................516921 lines processed
+#  chr12
+	......................451812 lines processed
+#  chr13
+	.................341439 lines processed
+#  chr14
+	...............315441 lines processed
+#  chr15
+	..............284897 lines processed
+#  chr16
+	...............309690 lines processed
+#  chr17
+	.............276950 lines processed
+#  chr18
+	.............277960 lines processed
+#  chr19
+	..........218711 lines processed
+#  chr20
+	..........218677 lines processed
+#  chr21
+	......126577 lines processed
+#  chr22
+	......136021 lines processed
+# - Checking finished in 391.6893s
+--------------------------------------------------
+# - Number of SNPs loaded: 55117
+# Run Elastic net regression
+# - Model fitting finised in 2856.8774s
+# Total running time of current lipid: 54.6543m
+# #################### 43 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: SM-42:4-
+# Processing lipid: SM-42:4-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778204 lines processed
+#  chr2
+	..........................................840722 lines processed
+#  chr3
+	..................................691081 lines processed
+#  chr4
+	.................................679011 lines processed
+#  chr5
+	...............................635943 lines processed
+#  chr6
+	..............................612553 lines processed
+#  chr7
+	...........................550777 lines processed
+#  chr8
+	...........................552339 lines processed
+#  chr9
+	.....................430882 lines processed
+#  chr10
+	........................491457 lines processed
+#  chr11
+	.........................517454 lines processed
+#  chr12
+	......................452350 lines processed
+#  chr13
+	.................341439 lines processed
+#  chr14
+	...............315471 lines processed
+#  chr15
+	..............284755 lines processed
+#  chr16
+	...............310590 lines processed
+#  chr17
+	.............275805 lines processed
+#  chr18
+	.............277960 lines processed
+#  chr19
+	..........218584 lines processed
+#  chr20
+	..........218845 lines processed
+#  chr21
+	......125587 lines processed
+#  chr22
+	......136015 lines processed
+# - Checking finished in 866.3932s
+--------------------------------------------------
+# - Number of SNPs loaded: 38726
+# Run Elastic net regression
+# - Model fitting finised in 2172.6931s
+# Total running time of current lipid: 50.9542m
+# #################### 44 lipid processed ####################
+
+# Load GWAS SNPs for current lipid: SM-43:1-
+# Processing lipid: SM-43:1-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778221 lines processed
+#  chr2
+	..........................................841736 lines processed
+#  chr3
+	..................................691082 lines processed
+#  chr4
+	..................................680225 lines processed
+#  chr5
+	...............................637656 lines processed
+#  chr6
+	..............................614638 lines processed
+#  chr7
+	...........................550966 lines processed
+#  chr8
+	...........................552049 lines processed
+#  chr9
+	.....................431085 lines processed
+#  chr10
+	........................491242 lines processed
+#  chr11
+	.........................517614 lines processed
+#  chr12
+	......................451629 lines processed
+#  chr13
+	.................341777 lines processed
+#  chr14
+	...............314069 lines processed
+#  chr15
+	..............284732 lines processed
+#  chr16
+	...............310591 lines processed
+#  chr17
+	.............276927 lines processed
+#  chr18
+	.............277960 lines processed
+#  chr19
+	..........219422 lines processed
+#  chr20
+	..........218869 lines processed
+#  chr21
+	......126706 lines processed
+#  chr22
+	......135528 lines processed
+# - Checking finished in 635.5690s
+--------------------------------------------------
+# - Number of SNPs loaded: 61040
+# Run Elastic net regression
+# - Model fitting finised in 3441.7272s
+# Total running time of current lipid: 68.4284m
+# #################### 45 lipid processed ####################
+[01;32mwanying@vgipiper[00m:[01;34m~/CCHC/lipidomics/prediction_models/code[00m$ [K[01;32mwanying@vgipiper[00m:[01;34m~/CCHC/lipidomics/prediction_models/code[00m$ a[K

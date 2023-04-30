@@ -1,0 +1,98 @@
+[01;32mwanying@vgipiper[00m:[01;34m~/CCHC/lipidomics/prediction_models/code[00m$ OMP_NUM_THREADS=1 python 01_elastic_net_sklearn_model.py --output lipid_species_l1_0.5_33-77_100alphaCV.txt --lipid_range 33 --range_window 45 --n_alphas 100
+# Run starts: 2023-04-26
+# Output file is ./lipid_species_l1_0.5_33-77_100alphaCV.txt.20230426_01:42:28
+# Cross validation on 100 alphas
+# Run lipids from index 33 to 77
+# Load lipidomic data (lipid species)
+# - data loaded from lipid_species_residuals_adj_for_sex_age_pc1-5.txt.reformatted: shape (1607, 831)
+
+# Load genotype IDs for matching (only need to read the first line of dosage file)
+# - Organize sample IDs so that their orders match in lipidomics data and dosage file
+# - Final processed lipidomic data: 1607
+
+# Load GWAS SNPs for current lipid: Cer-d18:1-26:0-
+# Processing lipid: Cer-d18:1-26:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778237 lines processed
+#  chr2
+	..........................................841677 lines processed
+#  chr3
+	.............................^CTraceback (most recent call last):
+  File "/belowshare/vumcshare/data100t1/home/wanying/CCHC/lipidomics/prediction_models/code/01_elastic_net_sklearn_model.py", line 229, in <module>
+    load_dosage_start_time, df_gwas_snp,dosage_all = load_all_dosage(gwas_snp_dir = gwas_snp_dir,
+  File "/belowshare/vumcshare/data100t1/home/wanying/CCHC/lipidomics/prediction_models/code/01_elastic_net_sklearn_model.py", line 134, in load_all_dosage
+    sample_ids, dosage_matrix = get_doasge(f"{dosage_dir}/{dosage_fn.replace('*', str(chr_num))}", list(df['POS']))
+  File "/belowshare/vumcshare/data100t1/home/wanying/CCHC/lipidomics/prediction_models/code/01_elastic_net_sklearn_model.py", line 59, in get_doasge
+    tmp = line.split()
+KeyboardInterrupt
+
+[01;32mwanying@vgipiper[00m:[01;34m~/CCHC/lipidomics/prediction_models/code[00m$ 
+[01;32mwanying@vgipiper[00m:[01;34m~/CCHC/lipidomics/prediction_models/code[00m$ 
+[01;32mwanying@vgipiper[00m:[01;34m~/CCHC/lipidomics/prediction_models/code[00m$ OMP_NUM_THREADS=1 python 01_elastic_net_sklearn_model.py --output lipid_species_l1_0.5_33-77_100alphaCV.txt --output_dir /data100t1/home/wanying/CCHC/lipidomics/prediction_models/elastic_net/training/model_params/100alphas --lipid_range 33 --range_window 45 --n_alphas 100
+# Run starts: 2023-04-26
+# Output file is /data100t1/home/wanying/CCHC/lipidomics/prediction_models/elastic_net/training/model_params/100alphas/lipid_species_l1_0.5_33-77_100alphaCV.txt.20230426_01:45:47
+# Cross validation on 100 alphas
+# Run lipids from index 33 to 77
+# Load lipidomic data (lipid species)
+# - data loaded from lipid_species_residuals_adj_for_sex_age_pc1-5.txt.reformatted: shape (1607, 831)
+
+# Load genotype IDs for matching (only need to read the first line of dosage file)
+# - Organize sample IDs so that their orders match in lipidomics data and dosage file
+# - Final processed lipidomic data: 1607
+
+# Load GWAS SNPs for current lipid: Cer-d18:1-26:0-
+# Processing lipid: Cer-d18:1-26:0-
+
+# Get dosage of GWAS SNPs to include in regression models
+# - Checking by chromosome:
+#  chr1
+	......................................778237 lines processed
+#  chr2
+	..........................................841677 lines processed
+#  chr3
+	..................................691123 lines processed
+#  chr4
+	..................................680225 lines processed
+#  chr5
+	...............................637358 lines processed
+#  chr6
+	..............................614577 lines processed
+#  chr7
+	...........................551033 lines processed
+#  chr8
+	...........................551915 lines processed
+#  chr9
+	.....................431202 lines processed
+#  chr10
+	........................491809 lines processed
+#  chr11
+	.........................517418 lines processed
+#  chr12
+	......................451575 lines processed
+#  chr13
+	.................341733 lines processed
+#  chr14
+	...............315447 lines processed
+#  chr15
+	..............284760 lines processed
+#  chr16
+	...............310118 lines processed
+#  chr17
+	.............276533 lines processed
+#  chr18
+	.............277716 lines processed
+#  chr19
+	..........219302 lines processed
+#  chr20
+	..........218581 lines processed
+#  chr21
+	......126526 lines processed
+#  chr22
+	......135940 lines processed
+# - Checking finished in 339.6944s
+--------------------------------------------------
+# - Number of SNPs loaded: 59558
+# Run Elastic net regression
