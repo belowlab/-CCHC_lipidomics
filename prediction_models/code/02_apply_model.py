@@ -49,3 +49,5 @@ with open(args.coeff) as fh:
         coeffs_array = np.array(coeffs_lst) # Coefficients of current lipid in numpy array
         # Load SNP dosage
         dosage = get_dosage(lipid)
+
+end_time = time.time()

@@ -164,8 +164,8 @@ if args.output_dir.endswith('/'): args.output_dir = args.output_dir[:-1]
 print('# Run starts:', datetime.datetime.now().strftime('%Y-%m-%d'))
 print('# Output file is', f'{args.output_dir}/{args.output}')
 print(f'# Cross validation on {args.n_alphas} alphas')
-if args.lipid_range==0:
-    print('# Run all lipids')
+if args.lipid_range==-1:
+    print('# Run all lipids. Ignore range_window')
 else:
     print(f'# Run lipids from index {args.lipid_range} to {args.lipid_range + args.range_window - 1}')
 
@@ -213,12 +213,12 @@ if args.lipid_range != -1:
         exit()
     else:
         try:
-            lst_lipids = df_lipid.columns[4+args.lipid_range : 4+args.lipid_range+args.range_window]
+            lst_lipids = df_lipid.columns[3+args.lipid_range : 4+args.lipid_range+args.range_window]
         except:
             # If window is too large, just run to the end of lipid list
-            lst_lipids = df_lipid.columns[4 + args.lipid_range:]
+            lst_lipids = df_lipid.columns[3 + args.lipid_range:]
 else:
-    lst_lipids = df_lipid.columns[4:]
+    lst_lipids = df_lipid.columns[3:]
 
 for lip in lst_lipids:
     gwas_snp_fn = f"{lip.replace('(', '-').replace(')', '-').replace(' ', '_').replace('/', '-')}_SNPs_pval_0.001.txt"
