@@ -1,0 +1,840 @@
+[01;32mwanying@vgipiper[00m:[01;34m~/CCHC/lipidomics/prediction_models/code[00m$ c[Kls
+00-1_convert_extracted_dosage_to_sql_database.ipynb  01_sklearn_models.ipynb           convert_coeff_to_sqlDB_100_alpha.log
+00-1_convert_extracted_dosage_to_sql_database.py     02_apply_model_on_test_set.ipynb  convert_coeff_to_sqlDB_100_alpha_v2.log
+00_preprocessing.ipynb                               02_apply_model.py                 convert_coeff_to_sqlDB.log
+01-1_convert_coefficients_to_sql_database.py         03_plotting.ipynb
+01_elastic_net_sklearn_model.py                      100alphas_all.log
+[01;32mwanying@vgipiper[00m:[01;34m~/CCHC/lipidomics/prediction_models/code[00m$ python 01-1_convert_coefficients_to_sql_database.py --input /data100t1/home/wanying/CCHC/lipidomics/prediction_models/elastic_net/training/model_params/lipid_species_l1_0.5_100_alpha_CV_All.txt --output_fn coeff_100_alpha.db[1P.db[1P.db[1P.db[1P.db[1P.db[1P.db[1P.db[1P.db[1P.db[1P.db[1P.db[1P.db[1P.db[1P.db[1P.dbt.dbm.db[.db[1P.dbp.db
+#Create a SQl database at: /data100t1/home/wanying/CCHC/lipidomics/prediction_models/elastic_net/training/model_params/tmp.db
+#Load coefficient file
+# - Process Sph(d18:1): 1255 SNPs added
+# - Process Sph(d18:2): 1243 SNPs added
+# - Process S1P(d16:1): 1107 SNPs added
+# - Process S1P(d18:0): 1192 SNPs added
+# - Process S1P(d18:1): 1194 SNPs added
+# - Process S1P(d18:2): 1088 SNPs added
+# - Process dhCer(d18:0/16:0): 1213 SNPs added
+# - Process dhCer(d18:0/18:0): 1202 SNPs added
+# - Process dhCer(d18:0/20:0): 1008 SNPs added
+# - Process dhCer(d18:0/22:0): 1063 SNPs added
+# - Process dhCer(d18:0/24:0): 1094 SNPs added
+# - Process dhCer(d18:0/24:1): 1037 SNPs added
+# - Process Cer(d16:1/16:0): 1084 SNPs added
+# - Process Cer(d16:1/18:0): 1142 SNPs added
+# - Process Cer(d16:1/20:0): 1036 SNPs added
+# - Process Cer(d16:1/22:0): 1153 SNPs added
+# - Process Cer(d16:1/23:0): 1229 SNPs added
+# - Process Cer(d16:1/24:0): 1206 SNPs added
+# - Process Cer(d16:1/24:1): 1154 SNPs added
+# - Process Cer(d17:1/16:0): 1124 SNPs added
+# - Process Cer(d17:1/18:0): 1043 SNPs added
+# - Process Cer(d17:1/20:0): 1171 SNPs added
+# - Process Cer(d17:1/22:0): 1130 SNPs added
+# - Process Cer(d17:1/23:0): 1181 SNPs added
+# - Process Cer(d17:1/24:0): 1071 SNPs added
+# - Process Cer(d17:1/24:1): 1189 SNPs added
+# - Process Cer(d18:1/16:0): 1181 SNPs added
+# - Process Cer(d18:1/18:0): 1020 SNPs added
+# - Process Cer(d18:1/20:0): 1325 SNPs added
+# - Process Cer(d18:1/21:0): 1151 SNPs added
+# - Process Cer(d18:1/22:0): 1062 SNPs added
+# - Process Cer(d18:1/23:0): 1184 SNPs added
+# - Process Cer(d18:1/24:0): 1033 SNPs added
+# - Process Cer(d18:1/24:1): 1139 SNPs added
+# - Process Cer(d18:1/26:0): 1201 SNPs added
+# - Process Cer(d18:2/16:0): 1155 SNPs added
+# - Process Cer(d18:2/18:0): 1091 SNPs added
+# - Process Cer(d18:2/20:0): 1112 SNPs added
+# - Process Cer(d18:2/22:0): 1160 SNPs added
+# - Process Cer(d18:2/23:0): 1063 SNPs added
+# - Process Cer(d18:2/24:0): 1137 SNPs added
+# - Process Cer(d18:2/24:1): 1348 SNPs added
+# - Process Cer(d18:2/26:0): 1046 SNPs added
+# - Process Cer(d19:1/18:0): 1147 SNPs added
+# - Process Cer(d19:1/20:0): 1070 SNPs added
+# - Process Cer(d19:1/22:0): 1054 SNPs added
+# - Process Cer(d19:1/23:0): 1167 SNPs added
+# - Process Cer(d19:1/24:0): 1125 SNPs added
+# - Process Cer(d19:1/24:1): 1195 SNPs added
+# - Process Cer(d19:1/26:0): 1230 SNPs added
+# - Process Cer(d20:1/22:0): 1044 SNPs added
+# - Process Cer(d20:1/23:0): 1201 SNPs added
+# - Process Cer(d20:1/24:0): 1120 SNPs added
+# - Process Cer(d20:1/24:1): 1040 SNPs added
+# - Process Cer(m18:0/20:0): 1086 SNPs added
+# - Process Cer(m18:0/22:0): 1062 SNPs added
+# - Process Cer(m18:0/23:0): 1154 SNPs added
+# - Process Cer(m18:0/24:0): 1100 SNPs added
+# - Process Cer(m18:0/24:1): 1164 SNPs added
+# - Process Cer(m18:1/18:0): 1025 SNPs added
+# - Process Cer(m18:1/20:0): 1041 SNPs added
+# - Process Cer(m18:1/22:0): 1132 SNPs added
+# - Process Cer(m18:1/23:0): 1162 SNPs added
+# - Process Cer(m18:1/24:0): 1140 SNPs added
+# - Process Cer(m18:1/24:1): 1037 SNPs added
+# - Process Cer1P(d18:1/16:0): 1071 SNPs added
+# - Process HexCer(d16:1/18:0): 1096 SNPs added
+# - Process HexCer(d16:1/20:0): 1300 SNPs added
+# - Process HexCer(d16:1/22:0): 1163 SNPs added
+# - Process HexCer(d16:1/24:0): 1360 SNPs added
+# - Process HexCer(d18:1/16:0): 1220 SNPs added
+# - Process HexCer(d18:1/18:0): 1148 SNPs added
+# - Process HexCer(d18:1/20:0): 1165 SNPs added
+# - Process HexCer(d18:1/22:0): 1310 SNPs added
+# - Process HexCer(d18:1/24:0): 1266 SNPs added
+# - Process HexCer(d18:1/24:1): 1243 SNPs added
+# - Process HexCer(d18:2/18:0): 1158 SNPs added
+# - Process HexCer(d18:2/20:0): 1148 SNPs added
+# - Process HexCer(d18:2/22:0): 1244 SNPs added
+# - Process HexCer(d18:2/24:0): 1266 SNPs added
+# - Process Hex2Cer(d16:1/16:0): 1054 SNPs added
+# - Process Hex2Cer(d16:1/24:1): 1311 SNPs added
+# - Process Hex2Cer(d18:1/16:0): 1134 SNPs added
+# - Process Hex2Cer(d18:1/20:0): 1108 SNPs added
+# - Process Hex2Cer(d18:1/22:0): 1003 SNPs added
+# - Process Hex2Cer(d18:1/24:0): 1163 SNPs added
+# - Process Hex2Cer(d18:1/24:1): 1332 SNPs added
+# - Process Hex2Cer(d18:2/16:0): 1220 SNPs added
+# - Process Hex2Cer(d18:2/18:0): 1140 SNPs added
+# - Process Hex2Cer(d18:2/24:1): 1155 SNPs added
+# - Process Hex3Cer(d18:1/16:0): 1118 SNPs added
+# - Process Hex3Cer(d18:1/18:0): 1146 SNPs added
+# - Process Hex3Cer(d18:1/20:0): 1393 SNPs added
+# - Process Hex3Cer(d18:1/22:0): 1289 SNPs added
+# - Process Hex3Cer(d18:1/24:0): 1202 SNPs added
+# - Process Hex3Cer(d18:1/24:1): 1225 SNPs added
+# - Process GM3(d18:1/16:0): 1239 SNPs added
+# - Process GM3(d18:1/18:0): 1163 SNPs added
+# - Process GM3(d18:1/20:0): 1119 SNPs added
+# - Process GM3(d18:1/22:0): 1161 SNPs added
+# - Process GM3(d18:1/24:0): 1142 SNPs added
+# - Process GM3(d18:1/24:1): 1135 SNPs added
+# - Process GM3(d18:2/24:1): 1129 SNPs added
+# - Process GD1(d18:1/24:1): 1216 SNPs added
+# - Process SHexCer(d18:1/16:0(OH)): 1061 SNPs added
+# - Process SHexCer(d18:1/16:0): 1234 SNPs added
+# - Process SHexCer(d18:1/24:0(OH)): 1244 SNPs added
+# - Process SHexCer(d18:1/24:0): 1018 SNPs added
+# - Process SHexCer(d18:1/24:1(OH)): 1165 SNPs added
+# - Process SHexCer(d18:1/24:1): 1103 SNPs added
+# - Process SM(34:3): 1095 SNPs added
+# - Process SM(35:2) (b): 1150 SNPs added
+# - Process SM(37:1): 1126 SNPs added
+# - Process SM(37:2): 1194 SNPs added
+# - Process SM(38:3) (a): 1280 SNPs added
+# - Process SM(38:3) (b): 1133 SNPs added
+# - Process SM(40:3) (a): 1223 SNPs added
+# - Process SM(40:3) (b): 1091 SNPs added
+# - Process SM(40:4): 1186 SNPs added
+# - Process SM(41:0): 997 SNPs added
+# - Process SM(41:1) (a): 1152 SNPs added
+# - Process SM(42:3): 1193 SNPs added
+# - Process SM(42:4): 1272 SNPs added
+# - Process SM(43:1): 1115 SNPs added
+# - Process SM(43:2) (b): 1289 SNPs added
+# - Process SM(43:2) (c): 1244 SNPs added
+# - Process SM(44:1): 1077 SNPs added
+# - Process SM(44:2): 1192 SNPs added
+# - Process SM(44:3): 1150 SNPs added
+# - Process SM(d16:1/19:0): 1180 SNPs added
+# - Process SM(d16:1/23:0)/SM(d17:1/22:0): 1028 SNPs added
+# - Process SM(d16:1/24:1): 1229 SNPs added
+# - Process SM(d17:1/14:0): 1111 SNPs added
+# - Process SM(d17:1/16:0): 1142 SNPs added
+# - Process SM(d17:1/24:1): 1280 SNPs added
+# - Process SM(d18:0/14:0): 1246 SNPs added
+# - Process SM(d18:0/16:0): 1172 SNPs added
+# - Process SM(d18:0/22:0): 894 SNPs added
+# - Process SM(d18:1/14:0)/SM(d16:1/16:0): 1116 SNPs added
+# - Process SM(d18:1/16:0): 1219 SNPs added
+# - Process SM(d18:1/17:0)/SM(d17:1/18:0): 1329 SNPs added
+# - Process SM(d18:1/18:0)/SM(d16:1/20:0): 1098 SNPs added
+# - Process SM(d18:1/20:0)/SM(d16:1/22:0): 1183 SNPs added
+# - Process SM(d18:1/22:0)/SM(d16:1/24:0): 1076 SNPs added
+# - Process SM(d18:1/23:0)/SM(d17:1/24:0): 1039 SNPs added
+# - Process SM(d18:1/24:0): 1032 SNPs added
+# - Process SM(d18:1/24:1): 1148 SNPs added
+# - Process SM(d18:2/14:0): 1112 SNPs added
+# - Process SM(d18:2/16:0): 1150 SNPs added
+# - Process SM(d18:2/17:0): 1421 SNPs added
+# - Process SM(d18:2/18:0): 1295 SNPs added
+# - Process SM(d18:2/18:1): 1196 SNPs added
+# - Process SM(d18:2/20:0): 1239 SNPs added
+# - Process SM(d18:2/22:0): 1072 SNPs added
+# - Process SM(d18:2/23:0): 1179 SNPs added
+# - Process SM(d18:2/24:0): 1306 SNPs added
+# - Process SM(d19:1/24:1): 1240 SNPs added
+# - Process PA(34:1): 1219 SNPs added
+# - Process PA(36:1): 1202 SNPs added
+# - Process PA(36:2): 1223 SNPs added
+# - Process PA(36:3): 1351 SNPs added
+# - Process PA(36:4): 1237 SNPs added
+# - Process PC(14:0_16:0): 1341 SNPs added
+# - Process PC(14:0_20:4): 1259 SNPs added
+# - Process PC(14:0_22:6): 1205 SNPs added
+# - Process PC(15-MHDA_18:1): 1122 SNPs added
+# - Process PC(15-MHDA_18:2): 1187 SNPs added
+# - Process PC(15-MHDA_20:4): 1094 SNPs added
+# - Process PC(15-MHDA_22:6): 1242 SNPs added
+# - Process PC(15:0_20:3): 1121 SNPs added
+# - Process PC(15:0_20:4): 1305 SNPs added
+# - Process PC(15:0_22:6): 1412 SNPs added
+# - Process PC(16:0_16:0): 1094 SNPs added
+# - Process PC(16:0_18:0): 1157 SNPs added
+# - Process PC(16:0_18:1): 1211 SNPs added
+# - Process PC(16:0_18:2): 1288 SNPs added
+# - Process PC(16:0_18:3) (a): 1173 SNPs added
+# - Process PC(16:0_18:3) (b): 1159 SNPs added
+# - Process PC(16:0_20:3) (a): 978 SNPs added
+# - Process PC(16:0_20:3) (b): 1195 SNPs added
+# - Process PC(16:0_20:4): 1342 SNPs added
+# - Process PC(16:0_20:5): 1248 SNPs added
+# - Process PC(16:0_22:6): 1199 SNPs added
+# - Process PC(16:1_18:2): 1264 SNPs added
+# - Process PC(16:1_20:4): 1300 SNPs added
+# - Process PC(16:1_22:6): 1232 SNPs added
+# - Process PC(17:0_18:1): 1164 SNPs added
+# - Process PC(17:0_18:2): 1191 SNPs added
+# - Process PC(17:0_20:4): 1073 SNPs added
+# - Process PC(17:0_22:6): 1205 SNPs added
+# - Process PC(17:1_18:2): 1153 SNPs added
+# - Process PC(18:0_18:1): 1065 SNPs added
+# - Process PC(18:0_18:2): 1174 SNPs added
+# - Process PC(18:0_20:3): 1029 SNPs added
+# - Process PC(18:0_20:4): 1227 SNPs added
+# - Process PC(18:0_22:4): 1165 SNPs added
+# - Process PC(18:0_22:5) (n3)/PC(20:1_20:4): 1219 SNPs added
+# - Process PC(18:0_22:5) (n6): 1265 SNPs added
+# - Process PC(18:0_22:6): 1302 SNPs added
+# - Process PC(18:1_18:1): 1009 SNPs added
+# - Process PC(18:1_18:2): 1198 SNPs added
+# - Process PC(18:1_20:3): 1241 SNPs added
+# - Process PC(18:1_22:6) (a): 1168 SNPs added
+# - Process PC(18:1_22:6) (b): 1158 SNPs added
+# - Process PC(18:2_18:2): 1208 SNPs added
+# - Process PC(18:2_20:5): 1203 SNPs added
+# - Process PC(20:0_20:4): 1157 SNPs added
+# - Process PC(28:0): 1197 SNPs added
+# - Process PC(31:0) (a): 1049 SNPs added
+# - Process PC(31:0) (b): 1189 SNPs added
+# - Process PC(31:1): 1207 SNPs added
+# - Process PC(32:1): 1112 SNPs added
+# - Process PC(32:2): 1085 SNPs added
+# - Process PC(33:0) (a): 1221 SNPs added
+# - Process PC(33:0) (b): 1106 SNPs added
+# - Process PC(33:1): 1255 SNPs added
+# - Process PC(33:2): 1049 SNPs added
+# - Process PC(34:5): 1141 SNPs added
+# - Process PC(35:5): 1143 SNPs added
+# - Process PC(36:6) (a): 1255 SNPs added
+# - Process PC(38:2): 1183 SNPs added
+# - Process PC(38:4) (b): 1196 SNPs added
+# - Process PC(38:5) (a): 1160 SNPs added
+# - Process PC(38:5) (b): 1153 SNPs added
+# - Process PC(38:6) (a): 1115 SNPs added
+# - Process PC(38:7) (c): 1153 SNPs added
+# - Process PC(39:5) (a): 1262 SNPs added
+# - Process PC(39:5) (b): 1188 SNPs added
+# - Process PC(40:7) (a): 1115 SNPs added
+# - Process PC(40:8): 1100 SNPs added
+# - Process PC(42:10): 1195 SNPs added
+# - Process PC(42:2) (a): 1120 SNPs added
+# - Process PC(42:2) (b): 1263 SNPs added
+# - Process PC(42:3) (a): 1131 SNPs added
+# - Process PC(42:3) (b): 998 SNPs added
+# - Process PC(42:4) (a): 1226 SNPs added
+# - Process PC(42:4) (b): 1262 SNPs added
+# - Process PC(42:5) (a): 1230 SNPs added
+# - Process PC(42:5) (b): 1332 SNPs added
+# - Process PC(42:6) (a): 1110 SNPs added
+# - Process PC(42:6) (b): 1069 SNPs added
+# - Process PC(42:7): 1184 SNPs added
+# - Process PC(42:8) (a): 1201 SNPs added
+# - Process PC(42:8) (b): 1312 SNPs added
+# - Process PC(42:8) (c): 1058 SNPs added
+# - Process PC(42:9) (a): 1049 SNPs added
+# - Process PC(42:9) (b): 1150 SNPs added
+# - Process PC(44:12): 1163 SNPs added
+# - Process PC(44:4) (a): 1059 SNPs added
+# - Process PC(44:4) (b): 1216 SNPs added
+# - Process PC(44:5): 1189 SNPs added
+# - Process PC(O-16:0/16:0): 1217 SNPs added
+# - Process PC(O-16:0/20:3): 1106 SNPs added
+# - Process PC(O-16:0/20:4): 1226 SNPs added
+# - Process PC(O-16:0/22:6): 1121 SNPs added
+# - Process PC(O-18:0/18:1): 1113 SNPs added
+# - Process PC(O-18:0/18:2): 1133 SNPs added
+# - Process PC(O-18:0/20:4): 1174 SNPs added
+# - Process PC(O-18:0/22:6): 1261 SNPs added
+# - Process PC(O-18:1/18:1): 1258 SNPs added
+# - Process PC(O-18:1/18:2): 1111 SNPs added
+# - Process PC(O-32:1): 1057 SNPs added
+# - Process PC(O-32:2): 1103 SNPs added
+# - Process PC(O-34:1): 1136 SNPs added
+# - Process PC(O-34:2): 1161 SNPs added
+# - Process PC(O-34:4): 953 SNPs added
+# - Process PC(O-35:4): 1094 SNPs added
+# - Process PC(O-36:0): 1169 SNPs added
+# - Process PC(O-36:5): 1166 SNPs added
+# - Process PC(O-38:5): 1036 SNPs added
+# - Process PC(O-40:5): 1289 SNPs added
+# - Process PC(O-40:7): 1140 SNPs added
+# - Process PC(O-42:4) (a): 1224 SNPs added
+# - Process PC(O-42:4) (b): 1317 SNPs added
+# - Process PC(O-42:5) (a): 1169 SNPs added
+# - Process PC(O-42:5) (b): 1265 SNPs added
+# - Process PC(O-42:5) (c): 1196 SNPs added
+# - Process PC(O-42:6): 1351 SNPs added
+# - Process PC(O-42:7): 1147 SNPs added
+# - Process PC(O-44:6) (a): 1354 SNPs added
+# - Process PC(O-44:6) (b): 1316 SNPs added
+# - Process PC(O-44:7): 1074 SNPs added
+# - Process PC(O-46:7) (a): 1258 SNPs added
+# - Process PC(O-46:7) (b): 1131 SNPs added
+# - Process PC(O-46:8): 1099 SNPs added
+# - Process PC(P-15:0/20:4) (a): 1024 SNPs added
+# - Process PC(P-15:0/20:4) (b): 1131 SNPs added
+# - Process PC(P-16:0/14:0): 1275 SNPs added
+# - Process PC(P-16:0/16:0): 1220 SNPs added
+# - Process PC(P-16:0/16:1): 1184 SNPs added
+# - Process PC(P-16:0/18:0): 1112 SNPs added
+# - Process PC(P-16:0/18:1): 1162 SNPs added
+# - Process PC(P-16:0/18:2): 1056 SNPs added
+# - Process PC(P-16:0/18:3): 1148 SNPs added
+# - Process PC(P-16:0/20:4): 1296 SNPs added
+# - Process PC(P-16:0/20:5): 1111 SNPs added
+# - Process PC(P-16:0/22:6): 1145 SNPs added
+# - Process PC(P-17:0/20:4) (a): 1211 SNPs added
+# - Process PC(P-17:0/20:4) (b): 1139 SNPs added
+# - Process PC(P-18:0/18:2): 1187 SNPs added
+# - Process PC(P-18:0/20:4): 1164 SNPs added
+# - Process PC(P-18:0/22:5): 1007 SNPs added
+# - Process PC(P-18:0/22:6): 1154 SNPs added
+# - Process PC(P-18:1/18:1): 1096 SNPs added
+# - Process PC(P-18:1/22:6): 1090 SNPs added
+# - Process PC(P-20:0/20:4): 1327 SNPs added
+# - Process PC(P-35:2) (a): 1120 SNPs added
+# - Process PC(P-35:2) (b): 1046 SNPs added
+# - Process PC(P-36:3): 1152 SNPs added
+# - Process PC(P-38:5) (a): 1251 SNPs added
+# - Process PC(P-38:5) (b): 1236 SNPs added
+# - Process PC(P-42:5): 1295 SNPs added
+# - Process PC(P-44:5): 1367 SNPs added
+# - Process PC(P-46:7): 1174 SNPs added
+# - Process PC(P-46:8): 1154 SNPs added
+# - Process LPC(14:0) [sn1]: 1264 SNPs added
+# - Process LPC(14:0) [sn2]: 1138 SNPs added
+# - Process LPC(15-MHDA) [sn1] / LPC(17:0) [sn2]: 1138 SNPs added
+# - Process LPC(15-MHDA) [sn1] [104_sn1]: 1144 SNPs added
+# - Process LPC(15-MHDA) [sn2]: 1167 SNPs added
+# - Process LPC(15:0) [sn1]: 1135 SNPs added
+# - Process LPC(15:0) [sn2]: 1196 SNPs added
+# - Process LPC(16:0) [sn1]: 1311 SNPs added
+# - Process LPC(16:0) [sn2]: 1187 SNPs added
+# - Process LPC(16:1) [sn1]: 1382 SNPs added
+# - Process LPC(16:1) [sn2]: 1341 SNPs added
+# - Process LPC(17:0) [sn1]: 1139 SNPs added
+# - Process LPC(17:1) (a) [sn1] [104_sn1]: 1241 SNPs added
+# - Process LPC(17:1) [sn1] (a) / LPC(17:1) [sn2] (b): 1278 SNPs added
+# - Process LPC(17:1) [sn1] (b): 1111 SNPs added
+# - Process LPC(17:1) [sn2] (a): 1172 SNPs added
+# - Process LPC(18:0) [sn1]: 1259 SNPs added
+# - Process LPC(18:0) [sn2]: 1228 SNPs added
+# - Process LPC(18:1) [sn1]: 1152 SNPs added
+# - Process LPC(18:1) [sn2]: 1074 SNPs added
+# - Process LPC(18:2) [sn1]: 976 SNPs added
+# - Process LPC(18:2) [sn2]: 981 SNPs added
+# - Process LPC(18:3) (a) [sn1] [104_sn1]: 1140 SNPs added
+# - Process LPC(18:3) [sn1] (a)/LPC(18:3) [sn2] (b): 1093 SNPs added
+# - Process LPC(18:3) [sn1] (b): 1131 SNPs added
+# - Process LPC(18:3) [sn2] (a): 1244 SNPs added
+# - Process LPC(19:0) (a) [sn1] [104_sn1]: 1137 SNPs added
+# - Process LPC(19:0) [sn1] (a) / LPC(19:0) [sn2] (b): 1033 SNPs added
+# - Process LPC(19:0) [sn1] (b): 1176 SNPs added
+# - Process LPC(19:0) [sn2] (a): 1187 SNPs added
+# - Process LPC(19:1) (a): 1141 SNPs added
+# - Process LPC(19:1) (b): 1192 SNPs added
+# - Process LPC(19:1) (c): 1118 SNPs added
+# - Process LPC(20:0) [sn1]: 1120 SNPs added
+# - Process LPC(20:0) [sn2]: 1159 SNPs added
+# - Process LPC(20:1) [sn1]: 1184 SNPs added
+# - Process LPC(20:1) [sn2]: 1306 SNPs added
+# - Process LPC(20:2) [sn1]: 1214 SNPs added
+# - Process LPC(20:2) [sn2]: 1108 SNPs added
+# - Process LPC(20:3) [sn1]: 1139 SNPs added
+# - Process LPC(20:3) [sn2]: 1283 SNPs added
+# - Process LPC(20:4) [sn1]: 1208 SNPs added
+# - Process LPC(20:4) [sn2]: 1153 SNPs added
+# - Process LPC(20:5) [sn1]: 1351 SNPs added
+# - Process LPC(20:5) [sn2]: 1368 SNPs added
+# - Process LPC(22:0) [sn1]: 1052 SNPs added
+# - Process LPC(22:0) [sn2]: 964 SNPs added
+# - Process LPC(22:1) [sn1]: 1218 SNPs added
+# - Process LPC(22:1) [sn2]: 1252 SNPs added
+# - Process LPC(22:4) [sn1]: 1278 SNPs added
+# - Process LPC(22:4) [sn2]: 1221 SNPs added
+# - Process LPC(22:5) (n3) [sn1] [104_sn1]: 1362 SNPs added
+# - Process LPC(22:5) [sn1] (n3)/LPC(22:5) [sn2] (n6): 1179 SNPs added
+# - Process LPC(22:5) [sn1] (n6): 1311 SNPs added
+# - Process LPC(22:5) [sn2] (n3): 1244 SNPs added
+# - Process LPC(22:6) [sn1]: 1071 SNPs added
+# - Process LPC(22:6) [sn2]: 1307 SNPs added
+# - Process LPC(24:0) [sn1]: 1053 SNPs added
+# - Process LPC(24:0) [sn2]: 1033 SNPs added
+# - Process LPC(26:0) [sn1]: 1147 SNPs added
+# - Process LPC(26:0) [sn2]: 1176 SNPs added
+# - Process LPC(O-16:0): 1231 SNPs added
+# - Process LPC(O-18:0): 1437 SNPs added
+# - Process LPC(O-18:1): 1227 SNPs added
+# - Process LPC(O-20:0): 1283 SNPs added
+# - Process LPC(O-20:1): 1258 SNPs added
+# - Process LPC(O-22:0): 1052 SNPs added
+# - Process LPC(O-22:1): 1144 SNPs added
+# - Process LPC(O-24:0): 1232 SNPs added
+# - Process LPC(O-24:1): 1199 SNPs added
+# - Process LPC(O-24:2): 1049 SNPs added
+# - Process LPC(P-16:0): 1254 SNPs added
+# - Process LPC(P-17:0) (a): 1173 SNPs added
+# - Process LPC(P-17:0) (b): 1165 SNPs added
+# - Process LPC(P-18:0): 966 SNPs added
+# - Process LPC(P-18:1): 1268 SNPs added
+# - Process LPC(P-20:0): 1024 SNPs added
+# - Process PE(15-MHDA_18:1): 1212 SNPs added
+# - Process PE(15-MHDA_18:2): 1207 SNPs added
+# - Process PE(15-MHDA_20:4): 1120 SNPs added
+# - Process PE(15-MHDA_22:6): 1186 SNPs added
+# - Process PE(16:0_16:0): 1361 SNPs added
+# - Process PE(16:0_16:1): 1069 SNPs added
+# - Process PE(16:0_18:1): 1086 SNPs added
+# - Process PE(16:0_18:2): 1160 SNPs added
+# - Process PE(16:0_18:3) (a): 1144 SNPs added
+# - Process PE(16:0_18:3) (b): 1111 SNPs added
+# - Process PE(16:0_20:3): 1137 SNPs added
+# - Process PE(16:0_20:4): 1097 SNPs added
+# - Process PE(16:0_20:5): 1332 SNPs added
+# - Process PE(16:0_22:6): 1282 SNPs added
+# - Process PE(16:1_18:2): 1131 SNPs added
+# - Process PE(16:1_20:4): 1108 SNPs added
+# - Process PE(17:0_18:1): 1197 SNPs added
+# - Process PE(17:0_18:2): 1216 SNPs added
+# - Process PE(17:0_20:4): 1158 SNPs added
+# - Process PE(17:0_22:6): 1281 SNPs added
+# - Process PE(18:0_18:1): 1231 SNPs added
+# - Process PE(18:0_18:2): 1296 SNPs added
+# - Process PE(18:0_20:3) (a): 1156 SNPs added
+# - Process PE(18:0_20:3) (b): 1315 SNPs added
+# - Process PE(18:0_20:4): 1076 SNPs added
+# - Process PE(18:0_22:4): 1040 SNPs added
+# - Process PE(18:0_22:5) (n3): 1137 SNPs added
+# - Process PE(18:0_22:5) (n6): 1196 SNPs added
+# - Process PE(18:0_22:6): 1230 SNPs added
+# - Process PE(18:1_18:1): 1286 SNPs added
+# - Process PE(18:1_18:2): 1172 SNPs added
+# - Process PE(18:1_22:6) (a): 1196 SNPs added
+# - Process PE(18:1_22:6) (b): 1174 SNPs added
+# - Process PE(20:0_20:4): 1256 SNPs added
+# - Process PE(36:0): 1181 SNPs added
+# - Process PE(38:5) (a): 1178 SNPs added
+# - Process PE(38:5) (b): 1192 SNPs added
+# - Process PE(O-16:0/18:2): 1245 SNPs added
+# - Process PE(O-16:0/20:3): 1139 SNPs added
+# - Process PE(O-16:0/20:4): 1161 SNPs added
+# - Process PE(O-16:0/22:4): 1157 SNPs added
+# - Process PE(O-16:0/22:6): 1067 SNPs added
+# - Process PE(O-18:0/20:4): 1102 SNPs added
+# - Process PE(O-18:0/22:5): 1069 SNPs added
+# - Process PE(O-18:0/22:6): 1074 SNPs added
+# - Process PE(O-18:1/18:2): 1079 SNPs added
+# - Process PE(O-18:1/22:6): 1071 SNPs added
+# - Process PE(O-34:1): 1051 SNPs added
+# - Process PE(O-36:5): 1095 SNPs added
+# - Process PE(O-38:5) (a): 1147 SNPs added
+# - Process PE(O-38:5) (b): 1128 SNPs added
+# - Process PE(P-15:0/20:4) (a): 1115 SNPs added
+# - Process PE(P-15:0/20:4) (b): 1083 SNPs added
+# - Process PE(P-15:0/22:6) (a): 1208 SNPs added
+# - Process PE(P-15:0/22:6) (b): 1072 SNPs added
+# - Process PE(P-16:0/18:1): 1182 SNPs added
+# - Process PE(P-16:0/18:2): 1223 SNPs added
+# - Process PE(P-16:0/18:3): 1118 SNPs added
+# - Process PE(P-16:0/20:3) (a): 1161 SNPs added
+# - Process PE(P-16:0/20:3) (b): 1111 SNPs added
+# - Process PE(P-16:0/20:4): 1129 SNPs added
+# - Process PE(P-16:0/20:5): 1165 SNPs added
+# - Process PE(P-16:0/22:4): 1135 SNPs added
+# - Process PE(P-16:0/22:5) (n3): 1114 SNPs added
+# - Process PE(P-16:0/22:5) (n6): 1351 SNPs added
+# - Process PE(P-16:0/22:6): 1132 SNPs added
+# - Process PE(P-17:0/20:4) (a): 1145 SNPs added
+# - Process PE(P-17:0/20:4) (b): 1156 SNPs added
+# - Process PE(P-17:0/22:6) (a): 1260 SNPs added
+# - Process PE(P-17:0/22:6) (b): 1194 SNPs added
+# - Process PE(P-18:0/18:1): 1165 SNPs added
+# - Process PE(P-18:0/18:2): 1243 SNPs added
+# - Process PE(P-18:0/18:3): 1136 SNPs added
+# - Process PE(P-18:0/20:3) (a): 1051 SNPs added
+# - Process PE(P-18:0/20:3) (b): 1202 SNPs added
+# - Process PE(P-18:0/20:4): 1181 SNPs added
+# - Process PE(P-18:0/20:5): 1274 SNPs added
+# - Process PE(P-18:0/22:4): 1274 SNPs added
+# - Process PE(P-18:0/22:5) (n3): 1174 SNPs added
+# - Process PE(P-18:0/22:5) (n6): 1292 SNPs added
+# - Process PE(P-18:0/22:6): 1105 SNPs added
+# - Process PE(P-18:1/18:1) (a): 1218 SNPs added
+# - Process PE(P-18:1/18:1) (b): 1204 SNPs added
+# - Process PE(P-18:1/18:2) (a): 1206 SNPs added
+# - Process PE(P-18:1/18:2) (b): 1213 SNPs added
+# - Process PE(P-18:1/20:3) (a): 1127 SNPs added
+# - Process PE(P-18:1/20:3) (b): 1004 SNPs added
+# - Process PE(P-18:1/20:4) (a): 1206 SNPs added
+# - Process PE(P-18:1/20:4) (b): 1120 SNPs added
+# - Process PE(P-18:1/20:5) (a): 1156 SNPs added
+# - Process PE(P-18:1/20:5) (b): 1227 SNPs added
+# - Process PE(P-18:1/22:4): 1294 SNPs added
+# - Process PE(P-18:1/22:5) (a): 1181 SNPs added
+# - Process PE(P-18:1/22:5) (b): 1208 SNPs added
+# - Process PE(P-18:1/22:6) (a): 1162 SNPs added
+# - Process PE(P-18:1/22:6) (b): 1146 SNPs added
+# - Process PE(P-19:0/20:4) (a): 1169 SNPs added
+# - Process PE(P-19:0/20:4) (b): 1137 SNPs added
+# - Process PE(P-20:0/18:1): 1344 SNPs added
+# - Process PE(P-20:0/18:2): 1151 SNPs added
+# - Process PE(P-20:0/20:4): 1329 SNPs added
+# - Process PE(P-20:0/22:6): 1122 SNPs added
+# - Process PE(P-20:1/20:4): 1163 SNPs added
+# - Process PE(P-20:1/22:6): 1192 SNPs added
+# - Process LPE(16:0) [sn1]: 1088 SNPs added
+# - Process LPE(16:0) [sn2]: 1108 SNPs added
+# - Process LPE(17:0): 1157 SNPs added
+# - Process LPE(18:0) [sn1]: 1205 SNPs added
+# - Process LPE(18:0) [sn2]: 1321 SNPs added
+# - Process LPE(18:1) [sn1]: 1114 SNPs added
+# - Process LPE(18:1) [sn2]: 1044 SNPs added
+# - Process LPE(18:2) [sn1]: 1118 SNPs added
+# - Process LPE(18:2) [sn2]: 1128 SNPs added
+# - Process LPE(20:4) [sn1]: 1156 SNPs added
+# - Process LPE(20:4) [sn2]: 1105 SNPs added
+# - Process LPE(22:6) [sn1]: 1147 SNPs added
+# - Process LPE(22:6) [sn2]: 1225 SNPs added
+# - Process LPE(P-16:0): 1416 SNPs added
+# - Process LPE(P-18:0): 1160 SNPs added
+# - Process LPE(P-18:1): 1378 SNPs added
+# - Process LPE(P-20:0): 1357 SNPs added
+# - Process PI (38:5) (b): 1203 SNPs added
+# - Process PI(15-MHDA_18:1)/PI(17:0_18:1): 1152 SNPs added
+# - Process PI(15-MHDA_18:2)/PI(17:0_18:2): 1215 SNPs added
+# - Process PI(16:0/16:0): 1225 SNPs added
+# - Process PI(16:0_16:1): 995 SNPs added
+# - Process PI(16:0_20:3) (a): 1125 SNPs added
+# - Process PI(16:0_20:3) (b): 1213 SNPs added
+# - Process PI(16:0_20:4): 1143 SNPs added
+# - Process PI(18:0_18:1): 1314 SNPs added
+# - Process PI(18:0_20:2): 1087 SNPs added
+# - Process PI(18:0_20:3) (a): 1459 SNPs added
+# - Process PI(18:0_20:3) (b): 1142 SNPs added
+# - Process PI(18:0_20:4): 1069 SNPs added
+# - Process PI(18:0_22:4): 1162 SNPs added
+# - Process PI(18:0_22:5) (n3): 1147 SNPs added
+# - Process PI(18:0_22:5) (n6): 1340 SNPs added
+# - Process PI(18:0_22:6): 1346 SNPs added
+# - Process PI(18:1_18:2): 1183 SNPs added
+# - Process PI(20:0_20:4): 1084 SNPs added
+# - Process PI(34:0): 1229 SNPs added
+# - Process PI(34:1): 1071 SNPs added
+# - Process PI(36:2): 1121 SNPs added
+# - Process PI(37:6): 1121 SNPs added
+# - Process PI(38:5) (a): 1286 SNPs added
+# - Process PI(38:6): 1285 SNPs added
+# - Process PI(39:6): 1478 SNPs added
+# - Process PIP1(38:4): 1128 SNPs added
+# - Process LPI(18:0): 1208 SNPs added
+# - Process LPI(18:1) [sn1]: 1147 SNPs added
+# - Process LPI(18:1) [sn2]: 1118 SNPs added
+# - Process LPI(18:2) [sn1]: 1298 SNPs added
+# - Process LPI(18:2) [sn2]: 1313 SNPs added
+# - Process LPI(20:4) [sn1]: 1144 SNPs added
+# - Process LPI(20:4) [sn2]: 1106 SNPs added
+# - Process PS(36:1): 1283 SNPs added
+# - Process PS(36:2): 1248 SNPs added
+# - Process PS(38:3): 1313 SNPs added
+# - Process PS(38:4): 1339 SNPs added
+# - Process PS(38:5): 1162 SNPs added
+# - Process PS(40:5): 1284 SNPs added
+# - Process PS(40:6): 1320 SNPs added
+# - Process PG(34:1): 1325 SNPs added
+# - Process PG(36:1): 1327 SNPs added
+# - Process PG(36:2): 1241 SNPs added
+# - Process CE(14:0): 1208 SNPs added
+# - Process CE(15:0): 1238 SNPs added
+# - Process CE(16:0): 1165 SNPs added
+# - Process CE(16:1): 1214 SNPs added
+# - Process CE(16:2): 1320 SNPs added
+# - Process CE(17:0): 1158 SNPs added
+# - Process CE(17:1): 1256 SNPs added
+# - Process CE(18:0): 1139 SNPs added
+# - Process CE(18:1): 1186 SNPs added
+# - Process CE(18:2): 1123 SNPs added
+# - Process CE(18:3): 1304 SNPs added
+# - Process CE(20:0): 1174 SNPs added
+# - Process CE(20:1): 1099 SNPs added
+# - Process CE(20:2): 1133 SNPs added
+# - Process CE(20:3): 1024 SNPs added
+# - Process CE(20:4): 1213 SNPs added
+# - Process CE(20:5): 1346 SNPs added
+# - Process CE(22:0): 1055 SNPs added
+# - Process CE(22:1): 1357 SNPs added
+# - Process CE(22:4): 1216 SNPs added
+# - Process CE(22:5): 1296 SNPs added
+# - Process CE(22:6): 1144 SNPs added
+# - Process CE(24:0): 1025 SNPs added
+# - Process CE(24:1): 1143 SNPs added
+# - Process CE(24:4): 1397 SNPs added
+# - Process CE(24:5): 1155 SNPs added
+# - Process CE(24:6): 1287 SNPs added
+# - Process COH: 1259 SNPs added
+# - Process DE(16:0): 1090 SNPs added
+# - Process DE(18:1): 1032 SNPs added
+# - Process DE(18:2): 1247 SNPs added
+# - Process DE(20:4): 1272 SNPs added
+# - Process DE(20:5): 1223 SNPs added
+# - Process DE(22:6): 1222 SNPs added
+# - Process deDE(18:2): 1273 SNPs added
+# - Process methyl-CE(18:0): 1264 SNPs added
+# - Process methyl-CE(18:1): 1113 SNPs added
+# - Process methyl-CE(18:2): 988 SNPs added
+# - Process methyl-CE(20:4): 1269 SNPs added
+# - Process methyl-CE(22:6): 1131 SNPs added
+# - Process methyl-DE(18:1): 1045 SNPs added
+# - Process methyl-DE(18:2): 1037 SNPs added
+# - Process dimethyl-CE(18:1): 1042 SNPs added
+# - Process dimethyl-CE(18:2): 1156 SNPs added
+# - Process dimethyl-CE(20:4): 1267 SNPs added
+# - Process dimethyl-CE(22:6): 1079 SNPs added
+# - Process FA(14:0): 1212 SNPs added
+# - Process FA(16:0): 1191 SNPs added
+# - Process FA(16:1): 1112 SNPs added
+# - Process FA(17:0): 1149 SNPs added
+# - Process FA(17:1): 1085 SNPs added
+# - Process FA(18:0): 1170 SNPs added
+# - Process FA(18:1): 1113 SNPs added
+# - Process FA(18:2): 1077 SNPs added
+# - Process FA(18:3): 1303 SNPs added
+# - Process FA(20:2): 1176 SNPs added
+# - Process FA(20:3): 1249 SNPs added
+# - Process FA(20:4): 1306 SNPs added
+# - Process FA(20:5): 1293 SNPs added
+# - Process FA(22:4): 1216 SNPs added
+# - Process FA(22:5): 1188 SNPs added
+# - Process FA(22:6): 1225 SNPs added
+# - Process AC(10:0): 1259 SNPs added
+# - Process AC(12:0): 1145 SNPs added
+# - Process AC(12:1): 1039 SNPs added
+# - Process AC(13:0): 1115 SNPs added
+# - Process AC(14:0): 1070 SNPs added
+# - Process AC(14:1): 1146 SNPs added
+# - Process AC(14:2): 1152 SNPs added
+# - Process AC(15:0) (a): 1133 SNPs added
+# - Process AC(15:0) (b): 1110 SNPs added
+# - Process AC(16:0): 1254 SNPs added
+# - Process AC(16:1): 1066 SNPs added
+# - Process AC(17:0) (a): 1195 SNPs added
+# - Process AC(17:0) (b): 1220 SNPs added
+# - Process AC(18:0): 1156 SNPs added
+# - Process AC(18:1): 1162 SNPs added
+# - Process AC(18:2): 1267 SNPs added
+# - Process AC(18:3): 1217 SNPs added
+# - Process AC(20:3) (a): 1197 SNPs added
+# - Process AC(20:3) (b): 1342 SNPs added
+# - Process AC(20:4): 1373 SNPs added
+# - Process AC(20:5): 1423 SNPs added
+# - Process AC(22:5): 1263 SNPs added
+# - Process AC(22:6): 1214 SNPs added
+# - Process AC(24:0): 1147 SNPs added
+# - Process AC(24:1) (a): 1187 SNPs added
+# - Process AC(24:1) (b): 1113 SNPs added
+# - Process AC(26:0): 1425 SNPs added
+# - Process AC(26:1): 1224 SNPs added
+# - Process AC(14:0)-OH: 1144 SNPs added
+# - Process AC(14:1)-OH: 1181 SNPs added
+# - Process AC(16:0)-OH: 1110 SNPs added
+# - Process AC(16:1)-OH: 1187 SNPs added
+# - Process AC(18:0)-OH: 1089 SNPs added
+# - Process AC(18:1)-OH: 1257 SNPs added
+# - Process AC(20:3)-OH: 1348 SNPs added
+# - Process AC(22:5)-OH: 1212 SNPs added
+# - Process CA: 1071 SNPs added
+# - Process dxCA: 1216 SNPs added
+# - Process DG(14:0_16:0): 1120 SNPs added
+# - Process DG(14:0_18:2): 1128 SNPs added
+# - Process DG(16:0_16:0): 1052 SNPs added
+# - Process DG(16:0_16:1): 965 SNPs added
+# - Process DG(16:0_18:1): 1025 SNPs added
+# - Process DG(16:0_18:2): 1031 SNPs added
+# - Process DG(16:0_20:4): 1065 SNPs added
+# - Process DG(16:0_22:5): 1059 SNPs added
+# - Process DG(16:0_22:6): 1193 SNPs added
+# - Process DG(16:1_18:1): 1035 SNPs added
+# - Process DG(17:0_18:1): 1051 SNPs added
+# - Process DG(17:1_18:1): 1068 SNPs added
+# - Process DG(18:0_18:1): 1048 SNPs added
+# - Process DG(18:0_18:2): 1184 SNPs added
+# - Process DG(18:0_20:4): 1037 SNPs added
+# - Process DG(18:1_18:1): 1170 SNPs added
+# - Process DG(18:1_18:2): 1238 SNPs added
+# - Process DG(18:1_18:3): 1333 SNPs added
+# - Process DG(18:1_20:3): 1168 SNPs added
+# - Process DG(18:1_20:4): 1097 SNPs added
+# - Process DG(18:1_20:5): 1057 SNPs added
+# - Process DG(18:1_22:5): 1187 SNPs added
+# - Process DG(18:1_22:6): 1097 SNPs added
+# - Process DG(18:2_18:2): 1301 SNPs added
+# - Process DG(18:2_20:4): 1167 SNPs added
+# - Process DG(18:2_22:6): 1139 SNPs added
+# - Process DG(O-18:0/20:0) [NL-O-18:0]: 1115 SNPs added
+# - Process DG(O-18:1/18:1) [NL-O-18:1]: 1098 SNPs added
+# - Process DG(O-18:1/20:0) [NL-O-18:1]: 1067 SNPs added
+# - Process TG(48:0) [SIM]: 1079 SNPs added
+# - Process TG(48:1) [SIM]: 1062 SNPs added
+# - Process TG(48:2) [SIM]: 1087 SNPs added
+# - Process TG(48:3) [SIM]: 1191 SNPs added
+# - Process TG(49:1) [SIM]: 1230 SNPs added
+# - Process TG(50:0) [SIM]: 1160 SNPs added
+# - Process TG(50:1) [SIM]: 983 SNPs added
+# - Process TG(50:2) [SIM]: 1066 SNPs added
+# - Process TG(50:3) [SIM]: 1020 SNPs added
+# - Process TG(50:4) [SIM]: 1108 SNPs added
+# - Process TG(51:0) [SIM]: 1039 SNPs added
+# - Process TG(51:1) [SIM]: 1144 SNPs added
+# - Process TG(51:2) [SIM]: 1120 SNPs added
+# - Process TG(52:1) [SIM]: 1136 SNPs added
+# - Process TG(52:2) [SIM]: 1062 SNPs added
+# - Process TG(52:3) [SIM]: 1065 SNPs added
+# - Process TG(52:4) [SIM]: 1024 SNPs added
+# - Process TG(52:5) [SIM]: 1056 SNPs added
+# - Process TG(53:2) [SIM]: 1095 SNPs added
+# - Process TG(54:0) [SIM]: 1104 SNPs added
+# - Process TG(54:1) [SIM]: 1076 SNPs added
+# - Process TG(54:2) [SIM]: 1044 SNPs added
+# - Process TG(54:3) [SIM]: 1101 SNPs added
+# - Process TG(54:4) [SIM]: 1271 SNPs added
+# - Process TG(54:5) [SIM]: 1108 SNPs added
+# - Process TG(54:6) [SIM]: 1313 SNPs added
+# - Process TG(54:7) [SIM]: 1044 SNPs added
+# - Process TG(56:6) [SIM]: 1044 SNPs added
+# - Process TG(56:7) [SIM]: 1058 SNPs added
+# - Process TG(56:8) [SIM]: 1219 SNPs added
+# - Process TG(56:9) [SIM]: 1191 SNPs added
+# - Process TG(58:10) [SIM]: 1293 SNPs added
+# - Process TG(48:0) [NL-16:0]: 1002 SNPs added
+# - Process TG(48:0) [NL-18:0]: 1027 SNPs added
+# - Process TG(48:1) [NL-16:1]: 1024 SNPs added
+# - Process TG(48:1) [NL-18:1]: 1080 SNPs added
+# - Process TG(48:2) [NL-14:0]: 1116 SNPs added
+# - Process TG(48:2) [NL-14:1]: 1052 SNPs added
+# - Process TG(48:2) [NL-16:1]: 1022 SNPs added
+# - Process TG(48:2) [NL-18:2]: 1079 SNPs added
+# - Process TG(48:3) [NL-14:0]: 1103 SNPs added
+# - Process TG(48:3) [NL-16:1]: 1218 SNPs added
+# - Process TG(48:3) [NL-18:3]: 1125 SNPs added
+# - Process TG(49:1) [NL-16:1]: 988 SNPs added
+# - Process TG(49:1) [NL-17:1]: 1082 SNPs added
+# - Process TG(50:0) [NL-18:0]: 1211 SNPs added
+# - Process TG(50:1) [NL-14:0]: 1159 SNPs added
+# - Process TG(50:1) [NL-16:0]: 1028 SNPs added
+# - Process TG(50:1) [NL-18:1]: 1013 SNPs added
+# - Process TG(50:2) [NL-14:0]: 1214 SNPs added
+# - Process TG(50:2) [NL-16:1]: 980 SNPs added
+# - Process TG(50:2) [NL-18:1]: 1192 SNPs added
+# - Process TG(50:2) [NL-18:2]: 1029 SNPs added
+# - Process TG(50:3) [NL-14:0]: 1210 SNPs added
+# - Process TG(50:3) [NL-14:1]: 1132 SNPs added
+# - Process TG(50:3) [NL-16:1]: 1090 SNPs added
+# - Process TG(50:3) [NL-18:2]: 1151 SNPs added
+# - Process TG(50:3) [NL-18:3]: 1029 SNPs added
+# - Process TG(50:4) [NL-14:0]: 1159 SNPs added
+# - Process TG(50:4) [NL-18:3]: 1194 SNPs added
+# - Process TG(50:4) [NL-20:4]: 1148 SNPs added
+# - Process TG(51:0) [NL-16:0]: 1082 SNPs added
+# - Process TG(51:1) [NL-17:0]: 1068 SNPs added
+# - Process TG(51:2) [NL-15:0]: 1152 SNPs added
+# - Process TG(51:2) [NL-17:0]: 1096 SNPs added
+# - Process TG(51:2) [NL-17:1]: 1017 SNPs added
+# - Process TG(52:1) [NL-18:0]: 1180 SNPs added
+# - Process TG(52:1) [NL-18:1]: 1084 SNPs added
+# - Process TG(52:2) [NL-16:0]: 1076 SNPs added
+# - Process TG(52:2) [NL-18:2]: 1165 SNPs added
+# - Process TG(52:3) [NL-16:1]: 1259 SNPs added
+# - Process TG(52:3) [NL-18:2]: 1390 SNPs added
+# - Process TG(52:4) [NL-16:1]: 1104 SNPs added
+# - Process TG(52:4) [NL-18:2]: 1172 SNPs added
+# - Process TG(52:4) [NL-18:3]: 1009 SNPs added
+# - Process TG(52:5) [NL-18:3]: 1123 SNPs added
+# - Process TG(52:5) [NL-20:4]: 1037 SNPs added
+# - Process TG(52:5) [NL-20:5]: 1025 SNPs added
+# - Process TG(53:2) [NL-17:1]: 1159 SNPs added
+# - Process TG(53:2) [NL-18:1]: 1253 SNPs added
+# - Process TG(54:0) [NL-18:0]: 1169 SNPs added
+# - Process TG(54:1) [NL-18:1]: 1112 SNPs added
+# - Process TG(54:2) [NL-18:0]: 1071 SNPs added
+# - Process TG(54:2) [NL-20:1]: 1173 SNPs added
+# - Process TG(54:3) [NL-18:1]: 1183 SNPs added
+# - Process TG(54:3) [NL-18:2]: 1077 SNPs added
+# - Process TG(54:4) [NL-18:2]: 1223 SNPs added
+# - Process TG(54:4) [NL-20:3]: 975 SNPs added
+# - Process TG(54:5) [NL-18:3]: 1304 SNPs added
+# - Process TG(54:5) [NL-20:4]: 1157 SNPs added
+# - Process TG(54:6) [NL-18:3]: 1158 SNPs added
+# - Process TG(54:6) [NL-20:4]: 1037 SNPs added
+# - Process TG(54:6) [NL-20:5]: 1191 SNPs added
+# - Process TG(54:6) [NL-22:6]: 1089 SNPs added
+# - Process TG(54:7) [NL-20:5]: 1078 SNPs added
+# - Process TG(54:7) [NL-22:6]: 1107 SNPs added
+# - Process TG(56:6) [NL-20:4]: 1147 SNPs added
+# - Process TG(56:6) [NL-22:5]: 1204 SNPs added
+# - Process TG(56:7) [NL-20:4]: 1062 SNPs added
+# - Process TG(56:7) [NL-20:5]: 1132 SNPs added
+# - Process TG(56:7) [NL-22:5]: 1147 SNPs added
+# - Process TG(56:7) [NL-22:6]: 1217 SNPs added
+# - Process TG(56:8) [NL-20:4]: 1184 SNPs added
+# - Process TG(56:8) [NL-20:5]: 1229 SNPs added
+# - Process TG(56:8) [NL-22:6]: 1127 SNPs added
+# - Process TG(56:9) [NL-22:6]: 1219 SNPs added
+# - Process TG(58:10) [NL-22:6]: 1072 SNPs added
+# - Process TG(58:8) [NL-22:6]: 1192 SNPs added
+# - Process TG(58:9) [NL-22:6]: 1192 SNPs added
+# - Process TG(O-50:1) [SIM]: 1099 SNPs added
+# - Process TG(O-50:2) [SIM]: 1079 SNPs added
+# - Process TG(O-52:1) [SIM]: 1110 SNPs added
+# - Process TG(O-52:2) [SIM]: 1147 SNPs added
+# - Process TG(O-54:2) [SIM]: 1106 SNPs added
+# - Process TG(O-50:1) [NL-15:0]: 1168 SNPs added
+# - Process TG(O-50:1) [NL-16:0]: 1025 SNPs added
+# - Process TG(O-50:1) [NL-17:1]: 1371 SNPs added
+# - Process TG(O-50:1) [NL-18:1]: 1109 SNPs added
+# - Process TG(O-50:2) [NL-16:1]: 1037 SNPs added
+# - Process TG(O-50:2) [NL-18:1]: 1144 SNPs added
+# - Process TG(O-50:2) [NL-18:2]: 1277 SNPs added
+# - Process TG(O-50:3) [NL-18:2]: 1303 SNPs added
+# - Process TG(O-52:0) [NL-16:0]: 1219 SNPs added
+# - Process TG(O-52:1) [NL-16:0]: 1140 SNPs added
+# - Process TG(O-52:1) [NL-18:1]: 1165 SNPs added
+# - Process TG(O-52:2) [NL-16:0]: 1039 SNPs added
+# - Process TG(O-52:2) [NL-17:1]: 1200 SNPs added
+# - Process TG(O-52:2) [NL-18:1]: 1111 SNPs added
+# - Process TG(O-54:2) [NL-17:1]: 1178 SNPs added
+# - Process TG(O-54:2) [NL-18:1]: 1081 SNPs added
+# - Process TG(O-54:3) [NL-17:1]: 1122 SNPs added
+# - Process TG(O-54:3) [NL-18:1]: 1128 SNPs added
+# - Process TG(O-54:4) [NL-17:1]: 1195 SNPs added
+# - Process TG(O-54:4) [NL-18:2]: 1158 SNPs added
+# - Process Ubiquinone: 1090 SNPs added
+# - Process CE(18:2) [+OH]: 1168 SNPs added
+# - Process CE(20:4) [+OH]: 1186 SNPs added
+# - Process LPC(18:2) [+OH]: 1059 SNPs added
+# - Process LPC(20:4) [+OH]: 1301 SNPs added
+# - Process LPC(22:6) [+OH]: 1217 SNPs added
+# - Process PC(34:2) [+OH]: 1113 SNPs added
+# - Process PC(36:4) [+OH]: 1091 SNPs added
+# - Process PC(38:6) [+OH]: 1135 SNPs added
+#Finished in 10.6473min
+[01;32mwanying@vgipiper[00m:[01;34m~/CCHC/lipidomics/prediction_models/code[00m$ 

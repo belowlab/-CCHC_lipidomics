@@ -26,6 +26,8 @@ python 01_elastic_net_sklearn_model.py --output lipid_species_l1_0.5_100-199.txt
 
 OMP_NUM_THREADS=1 python 01_elastic_net_sklearn_model.py --output lipid_species_l1_0.5_5-104_100_alpha_CV.txt \
 --output_dir /data100t1/home/wanying/CCHC/lipidomics/prediction_models/elastic_net/training/model_params/100alphas \
+--dosage_dir /data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_vcfs/training_max_unrelated_sampels_3rd_degree \
+--dosage_fn max_unrelated_set_chr*.vcf.dosage \
 --lipid_range 5 \
 --range_window 100 \
 --n_alphas 100
@@ -95,8 +97,8 @@ def get_doasge(dosage_fn, lst_snps):
 # Load dosage of all SNPs with p val<10-3 from GWAS
 def load_all_dosage(gwas_snp_fn: str,
                     gwas_snp_dir: str='',
-                    dosage_dir: str='/data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/subset_vcfs/train',
-                    dosage_fn: str='species_chr*.vcf.gz.dosage'):
+                    dosage_dir: str,
+                    dosage_fn: str):
     '''
     Get doage of all SNPs (GWAS pval<1e-3) from single-chrosmosome dosage files of a given lipid
     Params:
@@ -151,6 +153,10 @@ parser = argparse.ArgumentParser(description='Fit elastic net regression with 10
 parser.add_argument('-o', '--output', type=str,
                            help='Output file to  save alpha, l1_ratio and coefficients of chosen model')
 parser.add_argument('--output_dir', type=str, help='Output directory. Defualt is current directory', default='.')
+parser.add_argument('--dosage_dir', type=str, help='Derictory to dosage files',
+                    default='/data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/subset_vcfs/train')
+parser.add_argument('--dosage_fn', type=str, help='File name format of dosage files. Use * to replace chromosome number',
+                    default='species_chr*.vcf.gz.dosage')
 parser.add_argument('--lipid_range', type=int, default=-1,
                     help='Define a subset of lipids to run. Default -1 ie. run all lipids')
 parser.add_argument('--range_window', type=int, default=100,
@@ -161,6 +167,7 @@ parser.add_argument('--n_alphas', type=int, default=100,
 args = parser.parse_args()
 args.output = f"{args.output}.{datetime.datetime.now().strftime('%Y%m%d_%H:%M:%S')}"
 if args.output_dir.endswith('/'): args.output_dir = args.output_dir[:-1]
+if args.dosage_dir.endswith('/'): args.dosage_dir = args.output_dir[:-1]
 print('# Run starts:', datetime.datetime.now().strftime('%Y-%m-%d'))
 print('# Output file is', f'{args.output_dir}/{args.output}')
 print(f'# Cross validation on {args.n_alphas} alphas')
@@ -183,8 +190,7 @@ df_id_mapping = pd.read_csv(fn_id_mapping,
                                                      'lipidomic']).drop_duplicates(subset='lipidomic')[['LABID', 'genotype_ID']]
 
 print(f'\n# Load genotype IDs for matching (only need to read the first line of dosage file)')
-dosage_dir = '/data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/subset_vcfs/train'
-fn_genotype = f'{dosage_dir}/species_chr22.vcf.gz.dosage'
+fn_genotype = f'{args.dosage_dir}/species_chr22.vcf.gz.dosage'
 with open(fn_genotype) as fh:
     df_genotype_id = pd.DataFrame(fh.readline().strip().split()[9:], columns=['genotype_ID'])
 
@@ -228,8 +234,8 @@ for lip in lst_lipids:
         print(f'\n# Load GWAS SNPs for current lipid: {lip_name}')
         load_dosage_start_time, df_gwas_snp,dosage_all = load_all_dosage(gwas_snp_dir = gwas_snp_dir,
                                                                          gwas_snp_fn = gwas_snp_fn,
-                                                                         dosage_dir = '/data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/subset_vcfs/train',
-                                                                         dosage_fn = 'species_chr*.vcf.gz.dosage')
+                                                                         dosage_dir = args.dosage_dir,
+                                                                         dosage_fn = args.dosage_fn)
         print(f'# - Number of SNPs loaded: {len(df_gwas_snp)}')
         
         print('# Run Elastic net regression')

@@ -1,3 +1,7 @@
+# Fitting elastic net or ridge regression model using all SNPs
+# (no filtering of SNPs based on GWAS p values!)
+# So only need to load dosage files once
+
 from sklearn.linear_model import ElasticNetCV
 import pandas as pd
 import numpy as np
@@ -5,86 +9,52 @@ import os
 import time
 import argparse
 import sys
-# sys.path.append('/data100t1/home/wanying/lab_code/utils')
-# from rank_based_inverse_normal_transformation import inverse_normal_transformation
 import warnings
 import datetime
 warnings.filterwarnings(action='ignore')
+# import sqlite3
 
 '''
 Example call:
-# python 01_elastic_net_sklearn_model.py --output lipid_species_l1_0.5_500-599.txt --output_dir /data100t1/home/wanying/CCHC/lipidomics/prediction_models/elastic_net/training/model_params --lipid_range 500 --range_window 100 --n_alphas 10
-
-python 01_elastic_net_sklearn_model.py --output lipid_species_l1_0.5_100-199.txt \
---output_dir /data100t1/home/wanying/CCHC/lipidomics/prediction_models/elastic_net/training/model_params \
---lipid_range 100 \
---range_window 100 \
---n_alphas 100
 
 # (Per AlexP) To run in base environment and avoid multi-threading conflict
 # Run script as: OMP_NUM_THREADS=1 python my_script.py, for example:
 
-OMP_NUM_THREADS=1 python 01_elastic_net_sklearn_model.py --output lipid_species_l1_0.5_5-104_100_alpha_CV.txt \
---output_dir /data100t1/home/wanying/CCHC/lipidomics/prediction_models/elastic_net/training/model_params/100alphas \
+OMP_NUM_THREADS=1 python 01_elastic_net_sklearn_model.py \
+--output lipid_species_l1_0.5_test_run_100_alpha_CV.txt \
+--output_dir /data100t1/home/wanying/CCHC/lipidomics/prediction_models/elastic_net/training/model_params \
 --dosage_dir /data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_vcfs/training_max_unrelated_sampels_3rd_degree \
 --dosage_fn max_unrelated_set_chr*.vcf.dosage \
---lipid_range 5 \
---range_window 100 \
+--lipid_range 0 \
+--range_window 1 \
 --n_alphas 100
 
 '''
 # ---------------------- Help functions ----------------------
-def get_doasge(dosage_fn, lst_snps):
+def get_doasge(dosage_fn):
     '''
     Param:
-     - dosage_fn: name of dosage file to be check against (single chromosome only)
-     - lst_snps: a list of SNP positions to be searched for (single chromosome only)
+     - dosage_fn: name of dosage file to be loaded (single chromosome only)
     Return:
-     - sample_ids: smaple IDs
-     - dosage_matrix: dosage of given SNPs as a numpy array. Fill with NA if a SNP is not found
+     - sample_ids: sample IDs
+     - dosage_matrix: dosage of SNPs as a numpy array
     '''
     
     with open(dosage_fn) as fh:
         line = fh.readline().strip() # Take sample IDs from header line
         tmp = line.split()
         indx_dosage = tmp.index('FORMAT') + 1 # Get index of sample IDs and dosage values
-        indx_pos = tmp.index('POS') # Index of SNP position
         sample_ids = tmp[indx_dosage:] # Genotype IDs
         dosage_matrix = [] # Store dosage values in a numpy matrix. Lines are SNPs, columns are individuals
         
         line = fh.readline().strip()
-        snp_pos = lst_snps.pop(0) # Check from the first element
         count = 0
         print('\t', end='')
         while line != '':
-            # Scan through dosage file to get dosage of GWAS snps
-            tmp = line.split()
-            cur_pos = tmp[indx_pos]
-            
-            if float(cur_pos) == float(snp_pos): # Find a match
-                dosage = tmp[indx_dosage:]
-                dosage_matrix += dosage
-                if len(lst_snps) > 0:
-                    snp_pos = lst_snps.pop(0)
-                else:
-                    break
-                line = fh.readline().strip()
-                count += 1
-            elif float(cur_pos) > float(snp_pos):
-                # print(dosage_fn, cur_pos) # For testing !!!!
-                dosage = [np.nan] * len(sample_ids) # SNP not found in dosage file, fill dosage with NAs
-                dosage_matrix += dosage
-                if len(lst_snps) > 0:
-                    # If current position in dosage file is already larger than SNP pos
-                    # Does not need to read in the next line
-                    snp_pos = lst_snps.pop(0) # Check next SNP
-                else:
-                    # Does not need to continue reading dosage file when the SNP list is empty
-                    break
-            else:
-                # Keep reading in the next line if SNP pos is smaller than current pos
-                line = fh.readline().strip()
-                count += 1
+            # Scan through dosage file to get dosages of all snps
+            dosage_matrix += line.split()[indx_dosage:]
+            line = fh.readline().strip()
+            count += 1
             
             if count%1000000==0:
                 print(f'{count} lines processed', flush=True)
@@ -92,58 +62,43 @@ def get_doasge(dosage_fn, lst_snps):
             elif count%20000==0:
                 print('.', end='', flush=True)
     print(f'{count} lines processed')            
-    return sample_ids, np.array(dosage_matrix).reshape(-1, len(sample_ids))
+    return sample_ids, np.array(dosage_matrix, dtype='float64').reshape(-1, len(sample_ids))
 
-# Load dosage of all SNPs with p val<10-3 from GWAS
-def load_all_dosage(gwas_snp_fn: str,
-                    gwas_snp_dir: str,
-                    dosage_dir: str,
-                    dosage_fn: str):
+# Load dosages of all SNPs
+def load_all_dosage(dosage_dir: str, dosage_fn: str):
     '''
-    Get doage of all SNPs (GWAS pval<1e-3) from single-chrosmosome dosage files of a given lipid
+    Get doage of all SNPs from single-chrosmosome dosage files of a given lipid
     Params:
-        - gwas_snp_dir: directory to GWAS SNPs
-        - gwas_snp_fn: file name of GWAS SNPs
         - dosage_dir: Subsetted dosage file: species_chr*.vcf.gz.dosage
         - dosage_fn: file name of subset dosage files (by chromosome).
                     Replace chromosome number with '*', such as 'species_chr*.vcf.gz.dosage'
     Return:
         - start_time: start time of loading dosage
-        - df_gwas_snp: a dataframe of GWAS SNPs
-        - dosage_all: A numpy array of doage. Each row is a SNP, each column is a subject
+        - dosage_all: A numpy array of dosage. Each row is a SNP, each column is a subject
     '''
     # Check if file exists
-    if gwas_snp_dir.endswith('/'): gwas_snp_dir = gwas_snp_dir[:-1] # Remove last slash
-    if not os.path.isfile(f'{gwas_snp_dir}/{gwas_snp_fn}'):
-        print(f'# ERROR: GWAS SNP file not find: {gwas_snp_dir}/{gwas_snp_fn}\n# END')
+    if dosage_dir.endswith('/'): dosage_dir = dosage_dir[:-1] # Remove last slash
+    if not os.path.isfile(f'{dosage_dir}/{dosage_fn}'):
+        print(f'# ERROR: GWAS SNP file not find: {dosage_dir}/{dosage_fn}\n# END')
         exit()
-        
-    lip_name = gwas_snp_fn.split('_')[0]
-    print('# Processing lipid:', lip_name)
 
-    # print(f'# Load GWAS SNPs for current lipid')
-    df_gwas_snp = pd.read_csv(f'{gwas_snp_dir}/{gwas_snp_fn}', sep='\t').sort_values(by=['CHR', 'POS'])
-    # print(f'# - Number of SNPs loaded: {len(df_gwas_snp)}')
-
-    print('\n# Get dosage of GWAS SNPs to include in regression models')
+    print('\n# Get dosage of SNPs to include in regression models')
     print('# - Checking by chromosome:')
 
     dosage_all = '' # A numpy array to store dosage from all chromosome
     start_time = time.time() # Time execution time
-    for chr_num, df in df_gwas_snp.groupby(by='CHR'):
-        # dosage_fn = f'species_chr{chr_num}.vcf.gz.dosage'
-        print(f'#  chr{chr_num}')
-        sample_ids, dosage_matrix = get_doasge(f"{dosage_dir}/{dosage_fn.replace('*', str(chr_num))}", list(df['POS']))
-        # lst_df_dosage.append(pd.DataFrame(data=dosage_matrix, columns=sample_ids, index=df['POS']))
+
+    for chr_num in range(1, 23):
+        sample_ids, dosage_matrix = get_doasge(f"{dosage_dir}/{dosage_fn.replace('*', str(chr_num))}")
         if len(dosage_all) == 0: # if dosage array is empty
             dosage_all = dosage_matrix
         else:
             dosage_all = np.append(dosage_all, dosage_matrix, axis=0)
-        # break
+
     end_time = time.time()
-    print(f'# - Checking finished in {(end_time-start_time):.4f}s')
+    print(f'# - Checking finished in {(end_time-start_time)/60:.4f}m')
     print('-' * 50)
-    return start_time, df_gwas_snp, dosage_all.astype('float64')
+    return start_time, dosage_all
 
 # ---------------------- End of help functions ----------------------
 
@@ -163,6 +118,8 @@ parser.add_argument('--range_window', type=int, default=100,
                     help='Define a window of lipids to run. Default is 100, will run from lipid_range to lipid_range+range_window-1')
 parser.add_argument('--n_alphas', type=int, default=100,
                     help='Define how many alphas to test in CV. Dafault is 10. JTI used 100 as defined in R glmnet()')
+parser.add_argument('--model', type=str, default='en', choices=['en', 'ridge'],
+                    help="Define what model to fit. 'en'=Elastic net, 'ridge'=ridge regression")
 
 args = parser.parse_args()
 args.output = f"{args.output}.{datetime.datetime.now().strftime('%Y%m%d_%H:%M:%S')}"
@@ -202,14 +159,19 @@ print(f'# - Final processed lipidomic data: {len(df_lipid)}')
 
 
 # ################# Load GWAS snps of each lipid and run regression #################
-# dosage_all: each row contains doages of a single SNP across all individuals
+# dosage_all: each row contains dosages of a single SNP across all individuals
 # !! Lip species PI(15-MHDA_20:4)\PI(17:0_20:4) is missing
-gwas_snp_dir = '/data100t1/home/wanying/CCHC/lipidomics/output/lip_species_GWAS_snps_pval_1e-3' # GWAS SNPs with p value<1e-3
+
 # Save coefficients, alpha and l1 ratios of selected model for each lipid
 output_fh = open(f'{args.output_dir}/{args.output}', 'w')
 output_fh.write('lipid\talpha\tl1_ratio\tbest_r2\tcoefficients\n') # write header line
 output_fh_lip_pred = open(f'{args.output_dir}/{args.output}.pred', 'w') # Save predicted values of each lipid using best fitted model
 output_fh_lip_pred.write('Lipid'+'\t'+'\t'.join([val for val in df_lipid['Sample ID']])+'\n') # write header line
+
+# Get dosages of all SNPs
+print('#Load dosges of all SNPs')
+load_dosage_start_time, dosage_all = load_all_dosage(dosage_dir=args.dosage_dir, dosage_fn=args.dosage_fn)
+print(f'# - Number of SNPs loaded: {len(dosage_all)}')
 
 count = 0
 # get list of lipids to be fitted
@@ -227,24 +189,13 @@ else:
     lst_lipids = df_lipid.columns[3:]
 
 for lip in lst_lipids:
-    gwas_snp_fn = f"{lip.replace('(', '-').replace(')', '-').replace(' ', '_').replace('/', '-')}_SNPs_pval_0.001.txt"
-    if os.path.isfile(f'{gwas_snp_dir}/{gwas_snp_fn}'):
-        lip_name = gwas_snp_fn.split('_')[0] # Modified lipid name
-        # Get SNPs and dosage
-        print(f'\n# Load GWAS SNPs for current lipid: {lip_name}')
-        load_dosage_start_time, df_gwas_snp,dosage_all = load_all_dosage(gwas_snp_dir = gwas_snp_dir,
-                                                                         gwas_snp_fn = gwas_snp_fn,
-                                                                         dosage_dir = args.dosage_dir,
-                                                                         dosage_fn = args.dosage_fn)
-        print(f'# - Number of SNPs loaded: {len(df_gwas_snp)}')
-        
-        print('# Run Elastic net regression')
-        # lipid trait, already residuals and looks normal, so no need to INV
-        y = df_lipid[lip]
-        # y = inverse_normal_transformation(df_lipid[lip])
-        # print(y.shape)
+    print(f'#Current lipid is {lipid}')
+    # lipid trait, already residuals and looks normal, so no need to INV
+    y = df_lipid[lip]
 
-        start_time = time.time()
+    start_time = time.time()
+    if args.model=='en':
+        print('#Run Elastic net regression')
         # Notes from sklearn docs:
         # - l1_ratio is the alpha in R glmnet
         # - alpha is the lambda in R gmlnet
@@ -259,20 +210,24 @@ for lip in lst_lipids:
                             random_state=0,
                             n_jobs=32,
                             l1_ratio=0.5) # Default l1 ratio=0.5
-        X = dosage_all.T
-        regr.fit(X, y)
+    elif args.model=='ridge':
+        # Fit ridge regression
+        pass
 
-        end_time = time.time()
-        print(f'# - Model fitting finised in {(end_time - start_time):.4f}s')
-        
-        # Also output predicted values and best R2
-        output_fh.write(f"{lip}\t{regr.alpha_}\t{regr.l1_ratio_}\t{regr.score(X, y)}\t{','.join([str(x) for x in regr.coef_])}\n")
-        output_fh_lip_pred.write(lip+'\t'+'\t'.join([str(val) for val in regr.predict(X)])+'\n')
-        print(f'# Total running time of current lipid: {(end_time - load_dosage_start_time)/60:.4f}m')
-        # break
-    else:
-        print(f'# - Warning: {lip} not found')
+    X = dosage_all.T
+    regr.fit(X, y)
+
+    end_time = time.time()
+    print(f'# - Model fitting finished in {(end_time - start_time)/60:.4f}m')
+
+    # Also output predicted values and best R2
+    output_fh.write(f"{lip}\t{regr.alpha_}\t{regr.l1_ratio_}\t{regr.score(X, y)}\t{','.join([str(x) for x in regr.coef_])}\n")
+    output_fh_lip_pred.write(lip+'\t'+'\t'.join([str(val) for val in regr.predict(X)])+'\n')
+
     count += 1
     print(f'# #################### {count} lipid processed ####################')
+
+print(f'# Total running time: {(end_time - load_dosage_start_time)/60:.4f}m')
+print('#Done')
 output_fh.close()
 output_fh_lip_pred.close()

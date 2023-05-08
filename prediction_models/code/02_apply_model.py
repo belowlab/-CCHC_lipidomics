@@ -92,10 +92,6 @@ print('#Load lipid list')
 fh_lipid_list = open(args.lipid_list)
 lipid = fh_lipid_list.readline().strip()
 
-# Testing
-lipid = 'SM(35:2) (b)'
-
-
 count = 1
 while lipid != '':
     print(f'# - Process lipid #{count}: {lipid}', end='')
