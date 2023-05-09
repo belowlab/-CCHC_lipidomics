@@ -1,6 +1,8 @@
 from sklearn.linear_model import ElasticNetCV
 import pandas as pd
 import numpy as np
+from xopen import xopen # Used to transparently open compressed files
+
 import os
 import time
 import argparse
@@ -9,6 +11,8 @@ import sys
 # from rank_based_inverse_normal_transformation import inverse_normal_transformation
 import warnings
 import datetime
+import re
+
 warnings.filterwarnings(action='ignore')
 
 '''
@@ -44,7 +48,7 @@ def get_doasge(dosage_fn, lst_snps):
      - dosage_matrix: dosage of given SNPs as a numpy array. Fill with NA if a SNP is not found
     '''
     
-    with open(dosage_fn) as fh:
+    with xopen(dosage_fn) as fh:
         line = fh.readline().strip() # Take sample IDs from header line
         tmp = line.split()
         indx_dosage = tmp.index('FORMAT') + 1 # Get index of sample IDs and dosage values
@@ -56,12 +60,19 @@ def get_doasge(dosage_fn, lst_snps):
         snp_pos = lst_snps.pop(0) # Check from the first element
         count = 0
         print('\t', end='')
+
+        pos_regex = re.compile("^\S+\s+(\d+)") # Get the second column, which must be position.
+        
         while line != '':
             # Scan through dosage file to get dosage of GWAS snps
-            tmp = line.split()
-            cur_pos = tmp[indx_pos]
+            result = pos_regex.match(line)
+            cur_pos = result[1] if result is not None else None
+            if cur_pos is None:
+                print("Malformed line encountered and skipped: ", line)
+                continue
             
             if float(cur_pos) == float(snp_pos): # Find a match
+                tmp = line.split()
                 dosage = tmp[indx_dosage:]
                 dosage_matrix += dosage
                 if len(lst_snps) > 0:
@@ -96,9 +107,9 @@ def get_doasge(dosage_fn, lst_snps):
 
 # Load dosage of all SNPs with p val<10-3 from GWAS
 def load_all_dosage(gwas_snp_fn: str,
-                    gwas_snp_dir: str,
-                    dosage_dir: str,
-                    dosage_fn: str):
+                    gwas_snp_dir: str='',
+                    dosage_dir: str='',
+                    dosage_fn: str=''):
     '''
     Get doage of all SNPs (GWAS pval<1e-3) from single-chrosmosome dosage files of a given lipid
     Params:
@@ -163,6 +174,12 @@ parser.add_argument('--range_window', type=int, default=100,
                     help='Define a window of lipids to run. Default is 100, will run from lipid_range to lipid_range+range_window-1')
 parser.add_argument('--n_alphas', type=int, default=100,
                     help='Define how many alphas to test in CV. Dafault is 10. JTI used 100 as defined in R glmnet()')
+parser.add_argument('-n', '--n_jobs', type=int, default=2,
+                    help='Define how many jobs to pass to Scikit-Learn.')
+parser.add_argument('--lipid-filename', type=str, help='File with lipdopmic data')
+parser.add_argument('--id-mapping', type=str, help='ID mapping so that sample IDs match genotype IDs')
+parser.add_argument('--snps-dir', type=str, help='Directory with SNPs')
+
 
 args = parser.parse_args()
 args.output = f"{args.output}.{datetime.datetime.now().strftime('%Y%m%d_%H:%M:%S')}"
@@ -179,19 +196,19 @@ else:
 # ################# Load lipidomic data #################
 print('# Load lipidomic data (lipid species)')
 # fn_lipid = '/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_measures/lipid_species.txt'
-fn_lipid = '/data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/lipid_traits_residuals/train/lipid_species_residuals_adj_for_sex_age_pc1-5.txt.reformatted'
+fn_lipid = args.lipid_filename
 df_lipid = pd.read_csv(fn_lipid, sep='\t')
 print(f"# - data loaded from {fn_lipid.split('/')[-1]}: shape {df_lipid.shape}")
 
 # Re-order lipidomic data so that sample IDs match the order in genotype file
-fn_id_mapping = '/data100t1/home/wanying/CCHC/doc/samples_IDs/202211_merged_RNA_lipid_protein_genotype_mapping_and_availability.txt'
+fn_id_mapping = args.id_mapping
 df_id_mapping = pd.read_csv(fn_id_mapping,
                             sep='\t').dropna(subset=['genotype_ID',
                                                      'lipidomic']).drop_duplicates(subset='lipidomic')[['LABID', 'genotype_ID']]
 
 print(f'\n# Load genotype IDs for matching (only need to read the first line of dosage file)')
-fn_genotype = f"{args.dosage_dir}/{args.dosage_fn.replace('*', '22')}"
-with open(fn_genotype) as fh:
+fn_genotype = f'{args.dosage_dir}/{args.dosage_fn.replace("*","22")}'
+with xopen(fn_genotype) as fh:
     df_genotype_id = pd.DataFrame(fh.readline().strip().split()[9:], columns=['genotype_ID'])
 
 print(f'# - Organize sample IDs so that their orders match in lipidomics data and dosage file')
@@ -204,7 +221,7 @@ print(f'# - Final processed lipidomic data: {len(df_lipid)}')
 # ################# Load GWAS snps of each lipid and run regression #################
 # dosage_all: each row contains doages of a single SNP across all individuals
 # !! Lip species PI(15-MHDA_20:4)\PI(17:0_20:4) is missing
-gwas_snp_dir = '/data100t1/home/wanying/CCHC/lipidomics/output/lip_species_GWAS_snps_pval_1e-3' # GWAS SNPs with p value<1e-3
+gwas_snp_dir = args.snps_dir # GWAS SNPs with p value<1e-3
 # Save coefficients, alpha and l1 ratios of selected model for each lipid
 output_fh = open(f'{args.output_dir}/{args.output}', 'w')
 output_fh.write('lipid\talpha\tl1_ratio\tbest_r2\tcoefficients\n') # write header line
@@ -257,7 +274,7 @@ for lip in lst_lipids:
         regr = ElasticNetCV(cv=10,
                             n_alphas=args.n_alphas,
                             random_state=0,
-                            n_jobs=32,
+                            n_jobs=args.n_jobs,
                             l1_ratio=0.5) # Default l1 ratio=0.5
         X = dosage_all.T
         regr.fit(X, y)
