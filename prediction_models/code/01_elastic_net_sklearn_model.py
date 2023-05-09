@@ -2,6 +2,7 @@ from sklearn.linear_model import ElasticNetCV
 import pandas as pd
 import numpy as np
 from xopen import xopen # Used to transparently open compressed files
+from threadpoolctl import threadpool_limits # Better performance by limiting to 1 BLAS thread
 
 import os
 import time
@@ -277,7 +278,8 @@ for lip in lst_lipids:
                             n_jobs=args.n_jobs,
                             l1_ratio=0.5) # Default l1 ratio=0.5
         X = dosage_all.T
-        regr.fit(X, y)
+        with threadpool_limits(limits=1, user_api='blas'):
+            regr.fit(X, y)
 
         end_time = time.time()
         print(f'# - Model fitting finised in {(end_time - start_time):.4f}s')
