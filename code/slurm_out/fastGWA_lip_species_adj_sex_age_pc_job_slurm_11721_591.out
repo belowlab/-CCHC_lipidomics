@@ -1,0 +1,128 @@
+SLURM_JOBID:  12837
+SLURM_ARRAY_TASK_ID:  591
+SLURM_ARRAY_JOB_ID:  11721
+*******************************************************************
+* Genome-wide Complex Trait Analysis (GCTA)
+* version 1.93.2 beta Linux
+* (C) 2010-present, Jian Yang, The University of Queensland
+* Please report bugs to Jian Yang <jian.yang.qt@gmail.com>
+*******************************************************************
+Analysis started at 14:05:41 CDT on Wed May 10 2023.
+Hostname: vgipiper02
+
+Options: 
+ 
+--mbfile /data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/plink_files.txt 
+--grm-sparse /data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_GRM/lipidomic_sp_grm 
+--fastGWA-mlm 
+--keep /data100t1/home/wanying/CCHC/lipidomics/input_docs/primus/primus_rel_3/list_for_fastGWA.txt 
+--pheno /data100t1/home/wanying/CCHC/lipidomics/input_docs/pheno_covar_files/lipid_species_pheno/PE-P-19:0-20:4-_-a-.pheno 
+--qcovar /data100t1/home/wanying/CCHC/lipidomics/input_docs/pheno_covar_files/AGE_AT_VISIT-AGE2-PC1-PC2-PC3-PC4-PC5.qcovar 
+--covar /data100t1/home/wanying/CCHC/lipidomics/input_docs/pheno_covar_files/GENDER.covar 
+--save-fastGWA-mlm-residual 
+--thread-num 8 
+--out /data100t1/home/wanying/CCHC/lipidomics/output/traininig_set_lipid_species_GWAS/PE-P-19:0-20:4-_-a- 
+
+The program will be running on up to 8 threads.
+Reading PLINK sample file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr1.fam]...
+2289 individuals to be included from the sample file.
+Checking other sample files...
+  All files checked OK.
+Get 1566 samples from list [/data100t1/home/wanying/CCHC/lipidomics/input_docs/primus/primus_rel_3/list_for_fastGWA.txt].
+After keeping individuals, 1566 subjects remain.
+Reading phenotype data from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/pheno_covar_files/lipid_species_pheno/PE-P-19:0-20:4-_-a-.pheno]...
+1566 overlapping individuals with non-missing data to be included from the phenotype file.
+1566 individuals to be included. 0 males, 0 females, 1566 unknown.
+Reading PLINK BIM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr1.bim]...
+5410305 SNPs to be included from BIM file(s).
+Reading PLINK BIM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr2.bim]...
+11240681 SNPs to be included from BIM file(s).
+Reading PLINK BIM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr3.bim]...
+16058123 SNPs to be included from BIM file(s).
+Reading PLINK BIM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr4.bim]...
+20816375 SNPs to be included from BIM file(s).
+Reading PLINK BIM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr5.bim]...
+25208021 SNPs to be included from BIM file(s).
+Reading PLINK BIM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr6.bim]...
+29370117 SNPs to be included from BIM file(s).
+Reading PLINK BIM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr7.bim]...
+33312518 SNPs to be included from BIM file(s).
+Reading PLINK BIM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr8.bim]...
+37098564 SNPs to be included from BIM file(s).
+Reading PLINK BIM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr9.bim]...
+40078131 SNPs to be included from BIM file(s).
+Reading PLINK BIM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr10.bim]...
+43393511 SNPs to be included from BIM file(s).
+Reading PLINK BIM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr11.bim]...
+46716979 SNPs to be included from BIM file(s).
+Reading PLINK BIM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr12.bim]...
+49948241 SNPs to be included from BIM file(s).
+Reading PLINK BIM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr13.bim]...
+52355997 SNPs to be included from BIM file(s).
+Reading PLINK BIM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr14.bim]...
+54519125 SNPs to be included from BIM file(s).
+Reading PLINK BIM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr15.bim]...
+56491101 SNPs to be included from BIM file(s).
+Reading PLINK BIM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr16.bim]...
+58678340 SNPs to be included from BIM file(s).
+Reading PLINK BIM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr17.bim]...
+60642553 SNPs to be included from BIM file(s).
+Reading PLINK BIM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr18.bim]...
+62553129 SNPs to be included from BIM file(s).
+Reading PLINK BIM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr19.bim]...
+64096354 SNPs to be included from BIM file(s).
+Reading PLINK BIM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr20.bim]...
+65621422 SNPs to be included from BIM file(s).
+Reading PLINK BIM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr21.bim]...
+66515674 SNPs to be included from BIM file(s).
+Reading PLINK BIM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_plink_imputed/chr22.bim]...
+67471627 SNPs to be included from BIM file(s).
+Reading quantitative covariates from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/pheno_covar_files/AGE_AT_VISIT-AGE2-PC1-PC2-PC3-PC4-PC5.qcovar].
+7 covariates of 2287 samples to be included.
+Reading discrete covariates from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/pheno_covar_files/GENDER.covar].
+1 covariates of 2289 samples to be included.
+7 qcovar, 1 covar and 0 rcovar to be included.
+2287 common samples in covariates to be included.
+1566 overlapping individuals with non-missing data to be included from the covariate file(s).
+Reading the sparse GRM file from [/data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_GRM/lipidomic_sp_grm]...
+After matching all the files, 1566 individuals to be included in the analysis.
+Estimating the genetic variance (Vg) by fastGWA-REML (grid search)...
+Iteration 1, step size: 0.0146034, logL: -714.303. Vg: 0.321274, searching range: 0.306671 to 0.335878
+Iteration 2, step size: 0.00194712, logL: -714.303. Vg: 0.318354, searching range: 0.316407 to 0.320301
+Iteration 3, step size: 0.000259616, logL: -714.303. Vg: 0.317445, searching range: 0.317185 to 0.317705
+Iteration 4, step size: 3.46154e-05, logL: -714.303. Vg: 0.317462, searching range: 0.317428 to 0.317497
+Iteration 5, step size: 4.61539e-06, logL: -714.303. Vg: 0.317465, searching range: 0.31746 to 0.317469
+Iteration 6, step size: 6.15385e-07, logL: -714.303. Vg: 0.317466, searching range: 0.317466 to 0.317467
+Iteration 7, step size: 8.20514e-08, logL: -714.303. Vg: 0.317466, searching range: 0.317466 to 0.317467
+Iteration 8, step size: 1.09402e-08, logL: -714.303. Vg: 0.317467, searching range: 0.317467 to 0.317467
+Iteration 9, step size: 1.45869e-09, logL: -714.303. Vg: 0.317467, searching range: 0.317467 to 0.317467
+Iteration 10, step size: 1.94492e-10, logL: -714.303. Vg: 0.317467, searching range: 0.317467 to 0.317467
+Iteration 11, step size: 2.59323e-11, logL: -714.303. Vg: 0.317467, searching range: 0.317467 to 0.317467
+Iteration 12, step size: 3.45764e-12, logL: -714.303. Vg: 0.317467, searching range: 0.317467 to 0.317467
+Iteration 13, step size: 4.61016e-13, logL: -714.303. Vg: 0.317467, searching range: 0.317467 to 0.317467
+fastGWA-REML converged.
+logL: -714.303
+Sampling variance/covariance of the estimates of Vg and Ve:
+ 0.0868502 -0.0870734
+-0.0870734  0.0883695
+
+Source	Variance	SE
+Vg	0.317467	0.294704
+Ve	0.595245	0.29727
+Vp	0.912711
+
+Heritability = 0.347828 (Pval = 0.281373)
+fastGWA-REML runtime: 0.126118 sec.
+Warning: the estimate of Vg is not statistically significant. This is likely because the number of closely related individuals in the sample is not large enough. 
+In this case, the program will use linear regression for association test.
+
+Performing fastGWA linear regression analysis...
+fastGWA results will be saved in text format to [/data100t1/home/wanying/CCHC/lipidomics/output/traininig_set_lipid_species_GWAS/PE-P-19:0-20:4-_-a-.fastGWA].
+  Filtering out variants with MAF < 0.0001, customise it with --maf flag.
+  Filtering out variants with missingness rate > 0.10, customise it with --geno flag.
+  100% finished in 215.9 sec
+67471627 SNPs have been processed.
+Saved 42239236 SNPs.
+
+Analysis finished at 14:11:13 CDT on Wed May 10 2023
+Overall computational time: 5 minutes 31 sec.

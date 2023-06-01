@@ -12,7 +12,6 @@ import sys
 import warnings
 import datetime
 warnings.filterwarnings(action='ignore')
-# import sqlite3
 
 '''
 Example call:
@@ -67,7 +66,7 @@ def get_doasge(dosage_fn):
 # Load dosages of all SNPs
 def load_all_dosage(dosage_dir: str, dosage_fn: str):
     '''
-    Get doage of all SNPs from single-chrosmosome dosage files of a given lipid
+    Get dosage of all SNPs from single-chrosmosome dosage files of a given lipid
     Params:
         - dosage_dir: Subsetted dosage file: species_chr*.vcf.gz.dosage
         - dosage_fn: file name of subset dosage files (by chromosome).
@@ -78,9 +77,6 @@ def load_all_dosage(dosage_dir: str, dosage_fn: str):
     '''
     # Check if file exists
     if dosage_dir.endswith('/'): dosage_dir = dosage_dir[:-1] # Remove last slash
-    if not os.path.isfile(f'{dosage_dir}/{dosage_fn}'):
-        print(f'# ERROR: GWAS SNP file not find: {dosage_dir}/{dosage_fn}\n# END')
-        exit()
 
     print('\n# Get dosage of SNPs to include in regression models')
     print('# - Checking by chromosome:')
@@ -106,9 +102,9 @@ def load_all_dosage(dosage_dir: str, dosage_fn: str):
 # ################# Process args #################
 parser = argparse.ArgumentParser(description='Fit elastic net regression with 10 fold cross-validation')
 parser.add_argument('-o', '--output', type=str,
-                           help='Output file to  save alpha, l1_ratio and coefficients of chosen model')
-parser.add_argument('--output_dir', type=str, help='Output directory. Defualt is current directory', default='.')
-parser.add_argument('--dosage_dir', type=str, help='Derictory to dosage files',
+                           help='Output file to save alpha, l1_ratio and coefficients of chosen model. A database file will also be created using the same naming style')
+parser.add_argument('--output_dir', type=str, help='Output directory. Default is current directory', default='.')
+parser.add_argument('--dosage_dir', type=str, help='Directory to dosage files',
                     default='/data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/subset_vcfs/train')
 parser.add_argument('--dosage_fn', type=str, help='File name format of dosage files. Use * to replace chromosome number',
                     default='species_chr*.vcf.gz.dosage')
@@ -140,7 +136,7 @@ fn_lipid = '/data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs
 df_lipid = pd.read_csv(fn_lipid, sep='\t')
 print(f"# - data loaded from {fn_lipid.split('/')[-1]}: shape {df_lipid.shape}")
 
-# Re-order lipidomic data so that sample IDs match the order in genotype file
+# Re-order lipidomics data so that sample IDs match the order in genotype file
 fn_id_mapping = '/data100t1/home/wanying/CCHC/doc/samples_IDs/202211_merged_RNA_lipid_protein_genotype_mapping_and_availability.txt'
 df_id_mapping = pd.read_csv(fn_id_mapping,
                             sep='\t').dropna(subset=['genotype_ID',
@@ -157,11 +153,9 @@ df_lipid = df_genotype_id.merge(df_id_mapping.merge(df_lipid.drop_duplicates(sub
                                                     right_on='Sample ID'), on='genotype_ID')
 print(f'# - Final processed lipidomic data: {len(df_lipid)}')
 
-
 # ################# Load GWAS snps of each lipid and run regression #################
 # dosage_all: each row contains dosages of a single SNP across all individuals
 # !! Lip species PI(15-MHDA_20:4)\PI(17:0_20:4) is missing
-
 # Save coefficients, alpha and l1 ratios of selected model for each lipid
 output_fh = open(f'{args.output_dir}/{args.output}', 'w')
 output_fh.write('lipid\talpha\tl1_ratio\tbest_r2\tcoefficients\n') # write header line
@@ -231,3 +225,4 @@ print(f'# Total running time: {(end_time - load_dosage_start_time)/60:.4f}m')
 print('#Done')
 output_fh.close()
 output_fh_lip_pred.close()
+cur.close()

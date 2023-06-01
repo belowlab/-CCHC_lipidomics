@@ -37,10 +37,10 @@ OMP_NUM_THREADS=1 python 01_elastic_net_sklearn_model.py --output lipid_species_
 def get_doasge(dosage_fn, lst_snps):
     '''
     Param:
-     - dosage_fn: name of dosage file to be check against (single chromosome only)
+     - dosage_fn: name of dosage file to be checked against (single chromosome only)
      - lst_snps: a list of SNP positions to be searched for (single chromosome only)
     Return:
-     - sample_ids: smaple IDs
+     - sample_ids: sample IDs
      - dosage_matrix: dosage of given SNPs as a numpy array. Fill with NA if a SNP is not found
     '''
     
