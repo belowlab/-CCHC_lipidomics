@@ -35,7 +35,7 @@ def get_pred_vals(lipid, cur_coeff, cur_dosage, sample_ids):
     
     df_merged = df_coeff.merge(df_dosage, on='snp_id')
     
-    # Calcuate dot product of weight and dosage matrices
+    # Calculate dot product of weight and dosage matrices
     pred_vals = np.dot(df_merged['weight'].values, df_merged.iloc[:, 2:].values)
     return n_missing, pred_vals
 # ############## End of helper functions ##############

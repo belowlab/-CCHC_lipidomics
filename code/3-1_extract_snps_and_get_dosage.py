@@ -1,6 +1,7 @@
 '''
 Call script as:
-python 3-1_extract_snps_and_get_dosage.py --input_dir /data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_vcfs/training_max_unrelated_sampels_3rd_degree/ \
+python 3-1_extract_snps_and_get_dosage.py \
+--input_dir /data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_vcfs/training_max_unrelated_sampels_3rd_degree/ \
 --input_fn max_unrelated_set_chr*.vcf.gz  \
 --output_dir /data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/subset_vcfs/train/ \
 --result_dir /data100t1/home/wanying/CCHC/lipidomics/output/traininig_set_lipid_species_GWAS/adj_for_sex_age_pval_1e-3/ \

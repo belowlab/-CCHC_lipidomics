@@ -2,9 +2,14 @@
 # Remove duplications and sort by position, ref allele, alt allele
 '''
 Example code:
-python 00-2_merge_filtered_snps.py \
+python 00-1_merge_filtered_snps.py \
 --input_dir /data100t1/home/wanying/CCHC/lipidomics/output/traininig_set_lipid_species_GWAS/adj_for_sex_age_bmi_pval_1e-3/ \
 --output_dir /data100t1/home/wanying/CCHC/lipidomics/output/traininig_set_lipid_species_GWAS/adj_for_sex_age_bmi_pval_1e-3/ \
+--drop_multiallelic True
+
+python 00-1_merge_filtered_snps.py \
+--input_dir /data100t1/home/wanying/CCHC/lipidomics/output/traininig_set_lipid_species_GWAS/adj_for_sex_age_pval_1e-3/ \
+--output_dir /data100t1/home/wanying/CCHC/lipidomics/output/traininig_set_lipid_species_GWAS/adj_for_sex_age_pval_1e-3/ \
 --drop_multiallelic True
 '''
 import pandas as pd
@@ -58,7 +63,7 @@ df_all['ALT'] = df_all['SNP'].apply(lambda x: x.split(':')[-1])
 df_all.drop_duplicates(subset=['CHR', 'POS', 'REF', 'ALT'], inplace=True)
 df_all.sort_values(by=['CHR', 'POS', 'REF', 'ALT'], inplace=True)
 if args.drop_multiallelic:
-    df_all.drop_duplicates(subset='POS', keep=False, inplace=True)
+    df_all.drop_duplicates(subset=['CHR', 'POS'], keep=False, inplace=True)
 
 print('\n\n# Merged df:', len(df_all))
 
