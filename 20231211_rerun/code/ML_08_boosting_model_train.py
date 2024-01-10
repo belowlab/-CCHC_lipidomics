@@ -10,18 +10,22 @@
 Example call
 lip_type=species
 lipid="PC(44:5)"
+output_prefix=PC-44:5-
 python ML_08_boosting_model_train.py \
 --output_prefix test_run \
 --output_dir /data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/outputs/prediction_models/AdaBoost/${lip_type} \
---dosage_dir /data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/inputs/genotype_dosage/train/lipid_${lip_type} \
---dosage_fn lipid_${lip_type}_chr*.pval_0.001_maf_0.05.vcf.dosage.gz \
+--dosage_dir_train /data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/inputs/genotype_dosage/train/lipid_${lip_type} \
+--dosage_fn_train lipid_${lip_type}_chr*.pval_0.001_maf_0.05.vcf.dosage.gz \
+--dosage_dir_test /data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/inputs/genotype_dosage/test/lipid_${lip_type} \
+--dosage_fn_test lipid_${lip_type}_chr*.pval_0.001_maf_0.05.test.vcf.dosage.gz \
 --gwas_snp_dir /data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/outputs/fastGWA/lipid_${lip_type}_filter_by_pval_1e-07 \
 --gwas_snp_fn PC-44:5-_SNPs.pval_1e-07.txt \
 --lipid_name ${lipid} \
---trait_fn /data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/inputs/lipid_trait/lipid_${lip_type}_ID_matched.no_dup.residual.train.txt \
+--trait_fn_train /data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/inputs/lipid_trait/lipid_${lip_type}_ID_matched.no_dup.residual.train.txt \
+--trait_fn_test /data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/inputs/lipid_trait/lipid_${lip_type}_ID_matched.no_dup.residual.test.txt \
 --multiallelic False \
 --train True \
---n_estimator 100 \
+--n_estimator 10 \
 --boost_type Ada
 '''
 
@@ -66,18 +70,28 @@ def parse_arguments():
     parser.add_argument('-o', '--output_prefix', type=str,
                         help='Output file to save alpha, l1_ratio and coefficients of chosen model')
     parser.add_argument('--output_dir', type=str, help='Output directory. Default is current directory', default='.')
-    parser.add_argument('--dosage_dir', type=str, help='Derictory to dosage files',
+    parser.add_argument('--dosage_dir_train', type=str, help='Derictory to dosage files of training set',
                         default='/data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/inputs/genotype_dosage/train/lipid_species')
-    parser.add_argument('--dosage_fn', type=str, help='File name format of dosage files. Use * to replace chromosome number',
+    parser.add_argument('--dosage_fn_train', type=str, help='File name format of dosage files of training set. Use * to replace chromosome number',
                         default='species_chr*.vcf.gz.dosage')
+    parser.add_argument('--trait_fn_train', type=str,
+                        help='File name of lipidomics data (or other trait) on training set. File must in sample x trait format. Must have a column matches genotype IDs',
+                        default='/data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/inputs/lipid_trait/lipid_species_ID_matched.no_dup.residual.train.txt')
+    
+    # If --trait_fn_test, --dosage_dir_test and --dosage_dir_fn are provided, will apply model on test set and record performance
+    parser.add_argument('--dosage_dir_test', type=str, default=None, help='Derictory to dosage files of test set')
+    parser.add_argument('--dosage_fn_test', type=str, default=None,
+                        help='File name format of dosage files of test set. Use * to replace chromosome number')
+    parser.add_argument('--trait_fn_test', type=str,
+                        help='File name of lipidomics data (or other trait) of test set. File must in sample x trait format. Must have a column matches genotype IDs',
+                        default='/data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/inputs/lipid_trait/lipid_species_ID_matched.no_dup.residual.test.txt')
+
     parser.add_argument('--gwas_snp_dir', type=str, help='Directory to filtered GWAS SNPs (eg. GWAs SNPs with pval<1e-3)',
                         default='/data100t1/home/wanying/CCHC/lipidomics/output/traininig_set_lipid_species_GWAS/adj_for_sex_age_pval_1e-3')
     parser.add_argument('--gwas_snp_fn', type=str, help='File name of the filtered GWAS SNPs (eg. GWAs SNPs with pval<1e-3)',
                         default='AC-10:0-_SNPs_pval_0.001.txt')
     parser.add_argument('--lipid_name', type=str,
                         help='Name of the lipid to be processed')
-    parser.add_argument('--trait_fn', type=str, help='File name of lipidomics data (or other trait). File must in sample x trait format. Must have a column matches genotype IDs',
-                        default='/data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/inputs/lipid_trait/lipid_species_ID_matched.no_dup.residual.train.txt')
     parser.add_argument('--n_estimator', type=int, default=100,
                         help='Define how many estimator to use in the model')
     parser.add_argument('--multiallelic', type=str, default='False',
@@ -97,9 +111,9 @@ def sanity_checks():
 
     # Make all directory to be absolute path
     args.output_dir = os.path.expanduser(args.output_dir)
-    args.dosage_dir = os.path.expanduser(args.dosage_dir)
+    args.dosage_dir_train = os.path.expanduser(args.dosage_dir_train)
     args.gwas_snp_dir = os.path.expanduser(args.gwas_snp_dir)
-    args.trait_fn = os.path.expanduser(args.trait_fn)
+    args.trait_fn_train = os.path.expanduser(args.trait_fn_train)
 
     msg = '# Check output directory:' # For logging purpose
     if not os.path.isdir(args.output_dir):
@@ -115,12 +129,12 @@ def sanity_checks():
     logging.info(msg)
 
     # Check if files exist
-    logging.info('# Check dosage files')
+    logging.info('# Check dosage files of training data')
     all_dosage_files_exist = True
     for i in range(1, 23):
-        dosage_fn = os.path.join(args.dosage_dir, args.dosage_fn.replace('*', str(i)))
-        if not os.path.isfile(dosage_fn):
-            logging.error('# - CHR%s dosage file not found: %s' % (i, dosage_fn))
+        dosage_fn_train = os.path.join(args.dosage_dir_train, args.dosage_fn_train.replace('*', str(i)))
+        if not os.path.isfile(dosage_fn_train):
+            logging.error('# - CHR%s dosage file not found: %s' % (i, dosage_fn_train))
             all_dosage_files_exist = False
         else:
             logging.info('# - CHR%s: PASS' % i)
@@ -128,6 +142,19 @@ def sanity_checks():
         logging.error('# - Missing dosage files. Exit')
         exit()
 
+    if (args.dosage_dir_test is not None) and (args.dosage_fn_test is not None):
+        logging.info('# Check dosage files of test data')
+        all_dosage_files_exist = True
+        dosage_fn_test = os.path.join(args.dosage_dir_test, args.dosage_fn_test.replace('*', str(i)))
+        if not os.path.isfile(dosage_fn_test):
+            logging.error('# - CHR%s dosage file not found: %s' % (i, dosage_fn_test))
+            all_dosage_files_exist = False
+        else:
+            logging.info('# - CHR%s: PASS' % i)
+        if not all_dosage_files_exist:
+            logging.error('# - Missing dosage files. Exit')
+            exit()
+        
     logging.info('# Check (filtered) GWAS SNP file: ')
     if not os.path.isfile(os.path.join(args.gwas_snp_dir, args.gwas_snp_fn)):
         logging.error('# - filtered GWAS result not found: ' + os.path.join(args.gwas_snp_dir, args.gwas_snp_fn))
@@ -136,8 +163,8 @@ def sanity_checks():
         logging.info('# - PASS')
 
     logging.info('# Check trait file (residuals of lipidomic measures):')
-    if not os.path.isfile(args.trait_fn):
-        logging.error('# - trait file not found: ' + args.trait_fn)
+    if not os.path.isfile(args.trait_fn_train):
+        logging.error('# - trait file not found: ' + args.trait_fn_train)
         exit()
     else:
         logging.info('# - PASS')
@@ -233,41 +260,72 @@ sanity_checks()
 logging.info('# ' + '*' * 20 + ' Get dosage ' + '*' * 20)
 # Load dosage
 df_dosage = load_dosage(snp_dir=args.gwas_snp_dir,
-                     snp_fn=args.gwas_snp_fn,
-                     dosage_dir=args.dosage_dir,
-                     dosage_fn=args.dosage_fn)
+                        snp_fn=args.gwas_snp_fn,
+                        dosage_dir=args.dosage_dir_train,
+                        dosage_fn=args.dosage_fn_train)
 
-# Load trait
+# #################### Load trait ####################
 logging.info('# ' + '*' * 20 + ' Get trait values ' + '*' * 20)
-df_trait = load_trait_values(fn_trait=args.trait_fn)
+df_trait = load_trait_values(fn_trait=args.trait_fn_train)
 
-# Reorder smaples so that dosage and trait dataframe match
+# Reorder samples so that dosage and trait dataframe match
 logging.info('# - Order samples in dosage and trait so that they match')
 assert 'genotype_ID' in df_dosage.columns
 assert 'genotype_ID' in df_trait.columns
 if len(df_trait)>len(df_dosage):
-    # Take smaple IDs in the smaller dataframe to avoid NA
+    # Take sample IDs in the smaller dataframe to avoid NA
     samples_index=df_dosage['genotype_ID']
     df_trait = df_trait.set_index(keys='genotype_ID').reindex(samples_index).reset_index()
 else:
     samples_index=df_trait['genotype_ID']
     df_dosage = df_dosage.set_index(keys='genotype_ID').reindex(samples_index).reset_index()
 
-# print(df_trait)
-# print('-'*50)
-# print(df_dosage)
-
-# Train model
+# #################### Train model ####################
 logging.info('# ' + '*' * 20 + ' Model training ' + '*' * 20)
 X = df_dosage.iloc[:, 1:].values
 y = df_trait[args.lipid_name]
+assert X.shape[0] == y.shape[0]
+logging.info('# %s samples were used in model training' % y.shape[0])
 
 n_estimators = args.n_estimator
 regr = AdaBoostRegressor(random_state=0, n_estimators=n_estimators)
 regr.fit(X, y)
-print('# Model_ fitting r2:', regr.score(X, y))
-print('# Pearson r2', stats.pearsonr(y, regr.predict(X))[0]**2)
+logging.info('# N estimators=%s' % args.n_estimator)
+logging.info('# Model fitting r2: %.4f' % regr.score(X, y))
+
+# #################### Apply model on test set ####################
+logging.info('# ' + '*' * 20 + ' Apply model on test set ' + '*' * 20)
+logging.info('# Get dosage')
+# Load dosage
+df_dosage_test = load_dosage(snp_dir=args.gwas_snp_dir,
+                             snp_fn=args.gwas_snp_fn,
+                             dosage_dir=args.dosage_dir_test,
+                             dosage_fn=args.dosage_fn_test)
+
+# Load trait of test set
+logging.info('# - Get trait values')
+df_trait = load_trait_values(fn_trait=args.trait_fn_test)
+
+# Reorder samples so that dosage and trait dataframe match
+logging.info('# - Order samples in dosage and trait so that they match')
+assert 'genotype_ID' in df_dosage_test.columns
+assert 'genotype_ID' in df_trait.columns
+if len(df_trait)>len(df_dosage_test):
+    # Take sample IDs in the smaller dataframe to avoid NA
+    samples_index=df_dosage_test['genotype_ID']
+    df_trait = df_trait.set_index(keys='genotype_ID').reindex(samples_index).reset_index()
+else:
+    samples_index=df_trait['genotype_ID']
+    df_dosage_test = df_dosage_test.set_index(keys='genotype_ID').reindex(samples_index).reset_index()
+    
+X_test = df_dosage_test.iloc[:, 1:].values
+y_test = df_trait[args.lipid_name]
+
+print(df_dosage_test)
+print(df_dosage_test.shape)
+print(y_test.shape)
 
 
-print(X.shape)
-print(y.shape)
+logging.info('# %s samples were used in testing' % y_test.shape[0])
+assert X_test.shape[0] == y_test.shape[0]
+logging.info('# Pearson r2: %.4f' % stats.pearsonr(y_test, regr.predict(X_test))[0]**2)
