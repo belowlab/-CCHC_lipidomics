@@ -324,10 +324,17 @@ y_test = df_trait[args.lipid_name]
 
 logging.info('# %s samples were used in testing' % y_test.shape[0])
 assert X_test.shape[0] == y_test.shape[0]
-logging.info('# Pearson r2: %.4f' % stats.pearsonr(y_test, regr.predict(X_test))[0]**2)
+y_pred = regr.predict(X_test)
+logging.info('# Pearson r2: %.4f' % stats.pearsonr(y_test, y_pred)[0]**2)
 
 # #################### Save model and predicted values ####################
 logging.info('# ' + '*' * 20 + ' Save model and predicted values ' + '*' * 20)
-fn_model = args.output_prefix +  '.joblib'
+fn_model = os.path.join(args.output_dir, args.output_prefix+'.joblib')
 dump(regr, filename=fn_model)
 logging.info('# Model saved to: %s' % fn_model)
+
+fn_pred = os.path.join(args.output_dir, args.output_prefix+'.pred')
+with open(fn_pred, 'w') as fh:
+    fh.write('\t'.join(samples_index)+'\n')
+    fh.write('\t'.join(regr.predict(X_test)) + '\n')
+logging.info('# Predicted values saved to: %s' % fn_pred)
