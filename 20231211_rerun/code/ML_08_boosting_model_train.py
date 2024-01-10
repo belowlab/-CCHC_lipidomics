@@ -17,13 +17,14 @@ python ML_08_boosting_model_train.py \
 --dosage_fn lipid_${lip_type}_chr*.pval_0.001_maf_0.05.vcf.dosage.gz \
 --gwas_snp_dir /data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/outputs/fastGWA/lipid_${lip_type}_filter_by_pval_1e-07 \
 --gwas_snp_fn PC-44:5-_SNPs.pval_1e-07.txt \
---lip_name ${lipid} \
+--lipid_name ${lipid} \
 --trait_fn /data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/inputs/lipid_trait/lipid_${lip_type}_ID_matched.no_dup.residual.train.txt \
 --multiallelic False \
 --train True \
 --n_estimator 100 \
 --boost_type Ada
 '''
+
 import argparse
 from sklearn.ensemble import AdaBoostRegressor
 from sklearn.ensemble import GradientBoostingRegressor
@@ -31,8 +32,12 @@ import logging
 import subprocess
 import pandas as pd
 import numpy as np
+from scipy import stats
 import os
 import datetime
+# TODO
+# Save model with pickle
+# from pickle import dump
 
 # #################### Helper functions ####################
 def config_logging(log_fn):
@@ -69,7 +74,7 @@ def parse_arguments():
                         default='/data100t1/home/wanying/CCHC/lipidomics/output/traininig_set_lipid_species_GWAS/adj_for_sex_age_pval_1e-3')
     parser.add_argument('--gwas_snp_fn', type=str, help='File name of the filtered GWAS SNPs (eg. GWAs SNPs with pval<1e-3)',
                         default='AC-10:0-_SNPs_pval_0.001.txt')
-    parser.add_argument('--lip_name', type=str,
+    parser.add_argument('--lipid_name', type=str,
                         help='Name of the lipid to be processed')
     parser.add_argument('--trait_fn', type=str, help='File name of lipidomics data (or other trait). File must in sample x trait format. Must have a column matches genotype IDs',
                         default='/data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/inputs/lipid_trait/lipid_species_ID_matched.no_dup.residual.train.txt')
@@ -151,12 +156,19 @@ def sanity_checks():
         logging.info('# - %s: %s' % (arg, getattr(args, arg)))
     return msg
 
-
 def load_dosage(snp_dir, snp_fn, dosage_dir, dosage_fn):
-    logging.info('# - Load filtered SNPs')
+    '''
+    Load dosage data of a given lipid trait
+    :param snp_dir:
+    :param snp_fn:
+    :param dosage_dir:
+    :param dosage_fn:
+    :return:
+    '''
+    logging.info('# Load filtered SNPs')
     df_snps = pd.read_csv(os.path.join(snp_dir, snp_fn), sep='\t')
 
-    logging.info('# - Get SNP dosage from CHR1-22')
+    logging.info('# Get SNP dosage from CHR1-22')
     snps_all, dosage_all, lst_sample_ids = [], [], [] # lists of SNPs and dosage found and used in model, sample IDs
     total_num_snps = len(df_snps)
     c_all_loaded = 0 # track number of all loaded snps
@@ -188,42 +200,30 @@ def load_dosage(snp_dir, snp_fn, dosage_dir, dosage_fn):
         c_all_loaded += c
     df_dosage_all = pd.DataFrame(data=np.array(dosage_all), columns=lst_sample_ids, index=snps_all)
     logging.info('# - Total number of SNPs loaded: %s' % c)
-    logging.info('')
     return df_dosage_all.T.reset_index().rename(columns={'index':'genotype_ID'})
 
 
 # TODO
 # fix below code
-def load_trait_values(trait_dir, trait_fn):
+def load_trait_values(fn_trait):
+    '''
+    Load trait values (lipidomic residuals)
+    :param fn_trait: file name
+    :return: a DataFrame of trait values, a dictionary matches lipid and lipid names
+    '''
     # create a dictionary for modified lipid name matching
-    fn_trait_name_matching = f'/data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/inputs/lipid_trait/lipid_{lipid_type}.list'
-    df_trait_name_matching = pd.read_csv(fn_trait_name_matching, sep='\t', header=None).rename(columns={0:'Lipid'})
-    df_trait_name_matching['Lipid_name'] = df_trait_name_matching['Lipid'].apply(lambda x: x.replace('\\', '-').replace('/', '-').replace('(','-').replace(')','-').replace(' ', '_'))
-    dict_trait_name_matching = df_trait_name_matching.set_index(keys='Lipid_name').to_dict()['Lipid']
-
-    logging.info('# Load trait values: %s'%lipid)
+    # Lipid and lipid name are not the same. I did a few replacement to avoid special characters in file name
+    # TODO: lipid trait list is hard coded, might need to change, so it is more flexible
+    # fn_list_trait = f'/data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/inputs/lipid_trait/lipid_{lipid_type}.list'
+    # df_trait_name_matching = pd.read_csv(fn_list_trait, sep='\t', header=None).rename(columns={0:'Lipid'})
+    # df_trait_name_matching['Lipid_name'] = df_trait_name_matching['Lipid'].apply(lambda x: x.replace('\\', '-').replace('/', '-').replace('(','-').replace(')','-').replace(' ', '_'))
+    # dict_trait_name_matching = df_trait_name_matching.set_index(keys='Lipid_name').to_dict()['Lipid']
+    
+    logging.info('# Load trait values of all lipids')
     # trait_dir = '/data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/inputs/lipid_trait'
     # trait_fn = f'lipid_{lipid_type}_ID_matched.no_dup.residual.{data_type}.txt'
-    df_trait = pd.read_csv(os.path.join(trait_dir, trait_fn), sep='\t')
-    return df_trait, dict_trait_name_matching
-
-# def load_trait(trait_fn, genotype_ids):
-#     '''
-#     Load dependent variable Y (ie. residuals of lipidomics)
-#     :param trait_fn: file name (of lipidomics data or other trait).
-#                      File must in sample x trait format.
-#                      Must have a column matches genotype IDs
-#            genotype_ids: array-like genotype IDs for re-ordering
-#     :return: a dataframe of traits to be used for model training
-#     '''
-#     if trait_fn.endswith('.csv'):
-#         df = pd.read_csv(trait_fn)
-#     else:
-#         df = pd.read_csv(trait_fn, sep='\t')
-#
-#     # Re-order lipidomics data so that sample IDs match the order in genotype file
-#     # df.set_index(keys='genotyoe_IDs', inplace=True)
-#     return df.set_index(keys='genotype_ID').reindex(index=genotype_ids).reset_index()
+    df_trait = pd.read_csv(fn_trait, sep='\t')
+    return df_trait
 
 # #################### End of helper functions ####################
 
@@ -239,7 +239,35 @@ df_dosage = load_dosage(snp_dir=args.gwas_snp_dir,
 
 # Load trait
 logging.info('# ' + '*' * 20 + ' Get trait values ' + '*' * 20)
-df_trait = ()
+df_trait = load_trait_values(fn_trait=args.trait_fn)
+
+# Reorder smaples so that dosage and trait dataframe match
+logging.info('# - Order samples in dosage and trait so that they match')
+assert 'genotype_ID' in df_dosage.columns
+assert 'genotype_ID' in df_trait.columns
+if len(df_trait)>len(df_dosage):
+    # Take smaple IDs in the smaller dataframe to avoid NA
+    samples_index=df_dosage['genotype_ID']
+    df_trait = df_trait.set_index(keys='genotype_ID').reindex(samples_index).reset_index()
+else:
+    samples_index=df_trait['genotype_ID']
+    df_dosage = df_dosage.set_index(keys='genotype_ID').reindex(samples_index).reset_index()
+
+# print(df_trait)
+# print('-'*50)
+# print(df_dosage)
 
 # Train model
+logging.info('# ' + '*' * 20 + ' Model training ' + '*' * 20)
+X = df_dosage.iloc[:, 1:].values
+y = df_trait[args.lipid_name]
 
+n_estimators = args.n_estimator
+regr = AdaBoostRegressor(random_state=0, n_estimators=n_estimators)
+regr.fit(X, y)
+print('# Model_ fitting r2:', regr.score(X, y))
+print('# Pearson r2', stats.pearsonr(y, regr.predict(X))[0]**2)
+
+
+print(X.shape)
+print(y.shape)
