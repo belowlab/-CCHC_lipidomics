@@ -37,10 +37,11 @@ import subprocess
 import pandas as pd
 import numpy as np
 from scipy import stats
+from joblib import dump, load # To save trained model
 import os
 import datetime
-# TODO
-# Save model with pickle
+
+# Save model with pickle also works, but not the preferred way
 # from pickle import dump
 
 # #################### Helper functions ####################
@@ -321,11 +322,12 @@ else:
 X_test = df_dosage_test.iloc[:, 1:].values
 y_test = df_trait[args.lipid_name]
 
-print(df_dosage_test)
-print(df_dosage_test.shape)
-print(y_test.shape)
-
-
 logging.info('# %s samples were used in testing' % y_test.shape[0])
 assert X_test.shape[0] == y_test.shape[0]
 logging.info('# Pearson r2: %.4f' % stats.pearsonr(y_test, regr.predict(X_test))[0]**2)
+
+# #################### Save model and predicted values ####################
+logging.info('# ' + '*' * 20 + ' Save model and predicted values ' + '*' * 20)
+fn_model = args.output_prefix +  '.joblib'
+dump(regr, filename=fn_model)
+logging.info('# Model saved to: %s' % fn_model)
