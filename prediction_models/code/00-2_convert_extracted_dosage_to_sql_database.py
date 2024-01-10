@@ -1,14 +1,14 @@
 '''
 Call as
 # Training set
-python 00-1_convert_extracted_dosage_to_sql_database.py \
+python 00-2_convert_extracted_dosage_to_sql_database.py \
 --output_dir /data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/sqlDB \
 --output_fn dosage_train.db \
 --dosage_dir /data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/subset_vcfs/train \
 --dosage_fn species_chr*.vcf.dosage
 
 # Test set
-python 00-1_convert_extracted_dosage_to_sql_database.py \
+python 00-2_convert_extracted_dosage_to_sql_database.py \
 --output_dir /data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/sqlDB \
 --output_fn dosage_test.db \
 --dosage_dir /data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/subset_vcfs/test \

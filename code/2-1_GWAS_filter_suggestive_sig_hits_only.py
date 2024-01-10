@@ -30,7 +30,7 @@ print('\n\n################## Process:', lip, '##################')
 print('# - Load GWAS result')
 df = pd.read_csv(args.input, sep='\t')
 
-print(f'# - Save varaints by pvalue (suggestive significant pval): pval<={args.threshold}')
+print(f'# - Save variants by pvalue (suggestive significant pval): pval<={args.threshold}')
 df[df['P']<=args.threshold].to_csv(args.output+f'{lip}_SNPs_pval_{args.threshold}.txt', sep='\t', index=False)
 print('################## DONE ##################')
 

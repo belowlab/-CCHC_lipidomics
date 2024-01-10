@@ -5,8 +5,19 @@ python 3-1_extract_snps_and_get_dosage.py \
 --input_fn max_unrelated_set_chr*.vcf.gz  \
 --output_dir /data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/subset_vcfs/train/ \
 --result_dir /data100t1/home/wanying/CCHC/lipidomics/output/traininig_set_lipid_species_GWAS/adj_for_sex_age_pval_1e-3/ \
---all_snps_fn all_SNPs_combined_no_dup_species.txt \
+--all_snps_fn all_SNPs_combined_no_dup_no_multiallelic_species.txt \
 --lip_type species
+
+
+# For test set
+python 3-1_extract_snps_and_get_dosage.py \
+--input_dir /data100t1/home/wanying/CCHC/lipidomics/input_docs/lipidomic_sample_vcfs/test/ \
+--input_fn test_set_chr*.vcf.gz \
+--output_dir /data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/subset_vcfs/test/ \
+--result_dir /data100t1/home/wanying/CCHC/lipidomics/output/traininig_set_lipid_species_GWAS/adj_for_sex_age_pval_1e-3/ \
+--all_snps_fn all_SNPs_combined_no_dup_no_multiallelic_species.txt \
+--lip_type species
+
 '''
 
 # ################# TODO #################
@@ -32,9 +43,12 @@ parser.add_argument('--output_dir',
 parser.add_argument('--result_dir',
                     default='/data100t1/home/wanying/CCHC/lipidomics/output/traininig_set_lipid_species_GWAS/adj_for_sex_age_pval_1e-3/') # Filtered result file directory
 parser.add_argument('--all_snps_fn',
-                    default='all_SNPs_combined_no_dup_species.txt') # SNPs from all chromosomes, without duplication
+                    default='all_SNPs_combined_no_dup_no_multiallelic_species.txt') # SNPs from all chromosomes, without duplication
 parser.add_argument('--lip_type', default='species', choices=['class', 'species']) # Lipid class or species
 args = parser.parse_args()
+
+if not args.input_dir.endswith('/'): args.input_dir = args.input_dir+'/'
+if not args.output_dir.endswith('/'): args.output_dir = args.output_dir+'/'
 
 # Load SNPs with pval<1e-3 of model: trait ~ sex + age + snp + PC1-5 + grm
 # Use unrelated samples in training and testing

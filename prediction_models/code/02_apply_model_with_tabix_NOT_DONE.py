@@ -65,7 +65,7 @@ parser.add_argument('--output', default='/data100t1/home/wanying/CCHC/lipidomics
 parser.add_argument('--lipid_list',
                     default='/data100t1/home/wanying/CCHC/lipidomics/prediction_models/input_docs/lipid_traits_residuals/train/lipid_species_list.txt',
                     help='A list of lipid to test. One lipid per row without header line.')
-parser.add_argument('--overwrite', default='False', help='When set to True, overwrite output file if it already exists')
+parser.add_argument('--overwrite', default=False, help='When set to True, overwrite output file if it already exists')
 args = parser.parse_args()
 
 # print(args, type(args))

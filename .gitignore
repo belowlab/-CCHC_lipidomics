@@ -1,12 +1,19 @@
-data/
 # Unrelated files/folders
-.ipynb_checkpoints/
-*/.ipynb_checkpoints/
-prediction_models/
-!prediction_models/code
-input_docs/
-output/
+*/
+!.gitignore
 
+# Enable code/
+!code
+
+# Enable `prediction_models/code`.
+!prediction_models/
+prediction_models/*
+!prediction_models/code/
+
+# Enable `20231211_rerun/code`.
+!20231211_rerun/
+20231211_rerun/*
+!20231211_rerun/code/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

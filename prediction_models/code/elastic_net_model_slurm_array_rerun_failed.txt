@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --time=48:00:00
+#SBATCH --mem=25G
+#SBATCH --array=1-5
+#SBATCH --output=/data100t1/home/wanying/CCHC/lipidomics/prediction_models/code/slurm_log/en_model_train_lip_species_rerun_failed_job_slurm_%A_%a.out
+
+echo "SLURM_JOBID: " $SLURM_JOBID
+echo "SLURM_ARRAY_TASK_ID: " $SLURM_ARRAY_TASK_ID
+echo "SLURM_ARRAY_JOB_ID: " $SLURM_ARRAY_JOB_ID
+
+sed -n "${SLURM_ARRAY_TASK_ID}p" < /data100t1/home/wanying/CCHC/lipidomics/prediction_models/code/en_model_train_rerun_failed.txt | bash
