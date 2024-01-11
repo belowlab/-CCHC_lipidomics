@@ -59,7 +59,7 @@ def config_logging(log_fn):
                         format='# %(name)s - %(levelname)s - %(message)s')
     # Start logging
     logging.info(__file__)
-    logging.info('# ' + '#' * 20 + ' Run started on' + datetime.datetime.now().strftime('%Y-%m-%d') + ' ' +'#' * 20)
+    logging.info('# ' + '#' * 20 + ' Run started on ' + datetime.datetime.now().strftime('%Y-%m-%d') + ' ' +'#' * 20)
     logging.info('')
 
 def parse_arguments():
@@ -88,9 +88,9 @@ def parse_arguments():
                         default='/data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/inputs/lipid_trait/lipid_species_ID_matched.no_dup.residual.test.txt')
 
     parser.add_argument('--gwas_snp_dir', type=str, help='Directory to filtered GWAS SNPs (eg. GWAs SNPs with pval<1e-3)',
-                        default='/data100t1/home/wanying/CCHC/lipidomics/output/traininig_set_lipid_species_GWAS/adj_for_sex_age_pval_1e-3')
+                        default=None)
     parser.add_argument('--gwas_snp_fn', type=str, help='File name of the filtered GWAS SNPs (eg. GWAs SNPs with pval<1e-3)',
-                        default='AC-10:0-_SNPs_pval_0.001.txt')
+                        default=None)
     parser.add_argument('--lipid_name', type=str,
                         help='Name of the lipid to be processed')
     parser.add_argument('--n_estimator', type=int, default=100,
@@ -242,14 +242,7 @@ def load_trait_values(fn_trait):
     # create a dictionary for modified lipid name matching
     # Lipid and lipid name are not the same. I did a few replacement to avoid special characters in file name
     # TODO: lipid trait list is hard coded, might need to change, so it is more flexible
-    # fn_list_trait = f'/data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/inputs/lipid_trait/lipid_{lipid_type}.list'
-    # df_trait_name_matching = pd.read_csv(fn_list_trait, sep='\t', header=None).rename(columns={0:'Lipid'})
-    # df_trait_name_matching['Lipid_name'] = df_trait_name_matching['Lipid'].apply(lambda x: x.replace('\\', '-').replace('/', '-').replace('(','-').replace(')','-').replace(' ', '_'))
-    # dict_trait_name_matching = df_trait_name_matching.set_index(keys='Lipid_name').to_dict()['Lipid']
-    
     logging.info('# Load trait values of all lipids')
-    # trait_dir = '/data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/inputs/lipid_trait'
-    # trait_fn = f'lipid_{lipid_type}_ID_matched.no_dup.residual.{data_type}.txt'
     df_trait = pd.read_csv(fn_trait, sep='\t')
     return df_trait
 
