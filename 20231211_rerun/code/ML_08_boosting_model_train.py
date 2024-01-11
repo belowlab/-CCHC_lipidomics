@@ -12,7 +12,7 @@ lip_type=species
 lipid="PC(44:5)"
 output_prefix=PC-44:5-
 python ML_08_boosting_model_train.py \
---output_prefix test_run \
+--output_prefix ${output_prefix} \
 --output_dir /data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/outputs/prediction_models/AdaBoost/${lip_type} \
 --dosage_dir_train /data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/inputs/genotype_dosage/train/lipid_${lip_type} \
 --dosage_fn_train lipid_${lip_type}_chr*.pval_0.001_maf_0.05.vcf.dosage.gz \
@@ -227,7 +227,7 @@ def load_dosage(snp_dir, snp_fn, dosage_dir, dosage_fn):
         logging.info('#    - CHR%s: SNPs loaded %s/%s; Multiallelic or missing SNPs: %s' % (chr_num, c, total, count_missing))
         c_all_loaded += c
     df_dosage_all = pd.DataFrame(data=np.array(dosage_all), columns=lst_sample_ids, index=snps_all)
-    logging.info('# - Total number of SNPs loaded: %s' % c)
+    logging.info('# - Total number of SNPs loaded: %s' % c_all_loaded)
     return df_dosage_all.T.reset_index().rename(columns={'index':'genotype_ID'})
 
 
@@ -334,7 +334,8 @@ dump(regr, filename=fn_model)
 logging.info('# Model saved to: %s' % fn_model)
 
 fn_pred = os.path.join(args.output_dir, args.output_prefix+'.pred')
+y_pred = [str(x) for x in y_pred]
 with open(fn_pred, 'w') as fh:
     fh.write('\t'.join(samples_index)+'\n')
-    fh.write('\t'.join(regr.predict(X_test)) + '\n')
+    fh.write('\t'.join(y_pred))
 logging.info('# Predicted values saved to: %s' % fn_pred)
