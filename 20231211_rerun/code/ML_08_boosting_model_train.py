@@ -132,29 +132,32 @@ def sanity_checks():
     # Check if files exist
     logging.info('# Check dosage files of training data')
     all_dosage_files_exist = True
+    missing_chr = '' # Track missing chromosome
     for i in range(1, 23):
         dosage_fn_train = os.path.join(args.dosage_dir_train, args.dosage_fn_train.replace('*', str(i)))
         if not os.path.isfile(dosage_fn_train):
             logging.error('# - CHR%s dosage file not found: %s' % (i, dosage_fn_train))
             all_dosage_files_exist = False
-        else:
-            logging.info('# - CHR%s: PASS' % i)
+            missing_chr += ' '+str(i)
     if not all_dosage_files_exist:
-        logging.error('# - Missing dosage files. Exit')
+        logging.error('# - Missing dosage files of %s. Exit' % missing_chr)
         exit()
+    logging.info('# - PASS')
 
     if (args.dosage_dir_test is not None) and (args.dosage_fn_test is not None):
         logging.info('# Check dosage files of test data')
         all_dosage_files_exist = True
-        dosage_fn_test = os.path.join(args.dosage_dir_test, args.dosage_fn_test.replace('*', str(i)))
-        if not os.path.isfile(dosage_fn_test):
-            logging.error('# - CHR%s dosage file not found: %s' % (i, dosage_fn_test))
-            all_dosage_files_exist = False
-        else:
-            logging.info('# - CHR%s: PASS' % i)
+        missing_chr += ''
+        for i in range(1, 23):
+            dosage_fn_test = os.path.join(args.dosage_dir_test, args.dosage_fn_test.replace('*', str(i)))
+            if not os.path.isfile(dosage_fn_test):
+                logging.error('# - CHR%s dosage file not found: %s' % (i, dosage_fn_test))
+                all_dosage_files_exist = False
+                missing_chr += ' '+str(i)
         if not all_dosage_files_exist:
             logging.error('# - Missing dosage files. Exit')
             exit()
+        logging.info('# - PASS')
         
     logging.info('# Check (filtered) GWAS SNP file: ')
     if not os.path.isfile(os.path.join(args.gwas_snp_dir, args.gwas_snp_fn)):
