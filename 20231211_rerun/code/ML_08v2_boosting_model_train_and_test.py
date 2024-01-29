@@ -189,6 +189,40 @@ def sanity_checks():
         else:
             logging.info('# - %s: %s' % (arg, getattr(args, arg)))
     return msg
+
+def prepare_data(snp_fn, dosage_dir, dosage_fn, trait_fn):
+    '''
+    Load dosafe and trait. Get X and y for training or prediction
+    :param snp_fn: file name of filtered GWAS snps
+    :param dosage_dir:
+    :param dosage_fn:
+    :param trait_fn: file name of lipid trait
+    
+    :return:
+    df_dosage, df_lipid_trait: re-ordered dataframes
+    X: Features
+    y: outcome
+    '''
+    # Load dosage
+    df_dosage = load_dosage.load_dosage(snp_dir='',
+                                        snp_fn=snp_fn,
+                                        dosage_dir=dosage_dir,
+                                        dosage_fn=dosage_fn)
+    # Load lipid trait
+    df_lipid_trait = load_trait_values.load_trait_values(trait_dir='',
+                                                         trait_fn=trait_fn)
+    logging.info('# - Reorder samples, remove sample with missing value')
+    # Reorder dosage and trait dataframes
+    # Take the shorter one between dosage and lipid measure to avoid missing values
+    if len(df_dosage) < len(df_lipid_trait):
+        df_lipid_trait = df_lipid_trait.set_index(keys='genotype_ID').reindex(df_dosage['genotype_ID']).reset_index()
+    else:
+        df_dosage = df_dosage.set_index(keys='genotype_ID').reindex(df_lipid_trait['genotype_ID']).reset_index()
+
+    # Create X, y for model training
+    X = df_dosage.iloc[:, 1:].values
+    y = df_lipid_trait[args.lipid_name]
+    return df_dosage, df_lipid_trait, X, y
 # #################### End of helper functions ####################
 
 start = datetime.datetime.now()
@@ -197,25 +231,10 @@ sanity_checks()
 
 logging.info('')
 logging.info('# Load data')
-# Load dosage
-df_dosage = load_dosage.load_dosage(snp_dir='',
-                                    snp_fn=args.gwas_snp_fn,
-                                    dosage_dir=args.dosage_dir_train,
-                                    dosage_fn=args.dosage_fn_train)
-# Load lipid trait
-df_lipid_trait = load_trait_values.load_trait_values(trait_dir='',
-                                                     trait_fn = args.trait_fn_train)
-logging.info('# - Reorder samples, remove sample with missing value')
-# Reorder dosage and trait dataframes
-# Take the shorter one between dosage and lipid measure to avoid missing values
-if len(df_dosage) < len(df_lipid_trait):
-    df_lipid_trait = df_lipid_trait.set_index(keys='genotype_ID').reindex(df_dosage['genotype_ID']).reset_index()
-else:
-    df_dosage = df_dosage.set_index(keys='genotype_ID').reindex(df_lipid_trait['genotype_ID']).reset_index()
-
-# Create X, y for model training
-X = df_dosage.iloc[:, 1:].values
-y = df_lipid_trait[args.lipid_name]
+df_dosage, df_lipid_trait, X, y = prepare_data(snp_fn=args.gwas_snp_fn,
+                                               dosage_dir=args.dosage_dir_train,
+                                               dosage_fn=args.dosage_fn_train,
+                                               trait_fn=args.trait_fn_train)
 logging.info('# - Shape of X, y in training: %s, %s' % (X.shape, y.shape))
 
 logging.info('')
@@ -246,7 +265,7 @@ means = search.cv_results_['mean_test_score']
 stds = search.cv_results_['std_test_score']
 params = search.cv_results_['params']
 for mean, stdev, param in zip(means, stds, params):
-    logging.info("# - Score (validation) r2=%f (std=%f) with: %r" % (mean, stdev, param))
+    logging.info("# - Coefficient of determination score (validation) r2=%f (std=%f) with: %r" % (mean, stdev, param))
 
 # #################### Save model and predicted values ####################
 logging.info('# ' + '*' * 20 + ' Save model and predicted values ' + '*' * 20)
@@ -257,35 +276,26 @@ df_halving = pd.DataFrame(search.cv_results_) # Output some metrics
 df_halving.to_csv(cv_results_fn, sep='\t', index=False)
 
 fn_model = os.path.join(args.output_dir, args.output_prefix+'.joblib')
-dump(regr, filename=fn_model)
+dump(search, filename=fn_model)
 logging.info('# Model saved to: %s' % fn_model)
 
 # Apply on test set if test dosage files are provided
 if (args.dosage_dir_test is not None) and (args.dosage_fn_test is not None):
     logging.info('')
     logging.info('#' + '*' * 20 + ' Apply model on test set ' + '*' * 20)
-    df_dosage_test = load_dosage.load_dosage(snp_dir='', snp_fn = args.gwas_snp_fn,
-                                             dosage_dir = args.dosage_dir_test,
-                                             dosage_fn = args.dosage_fn_test)
-    df_lipid_trait_test = load_trait_values.load_trait_values(trait_dir='',
-                                                         trait_fn=args.trait_fn_test)
 
-    logging.info('# - Reorder samples, remove sample with missing value')
-    # Reorder dosage and trait dataframes
-    # Take the shorter one between dosage and lipid measure to avoid missing values
-    if len(df_dosage_test) < len(df_lipid_trait_test):
-        df_lipid_trait_test = df_lipid_trait_test.set_index(keys='genotype_ID').reindex(df_dosage_test['genotype_ID']).reset_index()
-    else:
-        df_dosage_test = df_dosage_test.set_index(keys='genotype_ID').reindex(df_lipid_trait_test['genotype_ID']).reset_index()
-
-    # Create X, y for model training
-    X = df_dosage.iloc[:, 1:].values
-    y = df_lipid_trait[args.lipid_name]
-    logging.info('# - Shape of X, y in training: %s, %s' % (X.shape, y.shape))
-
+    df_dosage_test, df_lipid_trait_test, X_test, y_test = prepare_data(snp_fn=args.gwas_snp_fn,
+                                                                       dosage_dir=args.dosage_dir_test,
+                                                                       dosage_fn=args.dosage_fn_test,
+                                                                       trait_fn=args.trait_fn_test)
+    logging.info('# - Shape of X, y in testing: %s, %s' % (X_test.shape, y_test.shape))
+    y_pred_test = search.predict(X_test)
     fn_pred = os.path.join(args.output_dir, args.output_prefix+'.pred')
-    y_pred = [str(x) for x in y_pred]
+    logging.info('# Coefficient of determination score (test) r2=%.4f')
+    logging.info('Pearson r2 on test: %.4f', stats.pearsonr(y_test, y_pred_test)[0]**2)
+    
+    y_pred_test = [str(x) for x in y_pred_test]
     with open(fn_pred, 'w') as fh:
-        fh.write('\t'.join(samples_index)+'\n')
-        fh.write('\t'.join(y_pred))
+        fh.write('\t'.join(df_lipid_trait_test['genotype_ID'])+'\n')
+        fh.write('\t'.join(y_pred_test))
     logging.info('# Predicted values saved to: %s' % fn_pred)
