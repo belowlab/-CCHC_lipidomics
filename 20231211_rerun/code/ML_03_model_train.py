@@ -1,4 +1,4 @@
-# Modified from ~/CCHC/lipidomics/prediction_models/code/01_elastic_net_sklearn_model_txt_file_wtih_tabix.py
+# Modified from ~/CCHC/lipidomics/prediction_models/code/01_elastic_net_sklearn_model_txt_file_with_tabix.py
 # Extract SNP dosage and train model of a given lipid trait
 
 # #################################################################
@@ -18,6 +18,7 @@ import gzip
 import warnings
 import datetime
 warnings.filterwarnings(action='ignore')
+from scipy import stats
 
 '''
 Example call:
@@ -379,3 +380,16 @@ print('\n#', '#'*40, 'DONE', '#'*40)
 # print('#### INTERCEPT', regr.intercept_)
 output_fh.close()
 output_fh_lip_pred.close()
+
+
+
+y_pred = regr.predict(X)
+print('# Pearson r=%s, pval=%s' % stats.pearsonr(y, y_pred))
+
+# #############
+print('#', '-'*50)
+print('# y true:', len(y))
+print(','.join([str(val) for val in y]))
+print('# y pred:', len(y_pred))
+print(','.join([str(val) for val in y_pred]))
+print()

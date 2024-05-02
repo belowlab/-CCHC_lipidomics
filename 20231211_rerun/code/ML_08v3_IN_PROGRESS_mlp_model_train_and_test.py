@@ -1,12 +1,12 @@
-# Modified from ML_08_boosting_model_train.py
-# Train and test boosting models. Use 10-fold CV
+# Modified from ML_08v2_boosting_model_train.py
+# Train and test MLP models. Use 10-fold CV
 
 '''
 Example call
 lip_type=species
 lipid="AC(16:1)-OH"
 output_prefix=AC-16:1--OH
-python ML_08v2_boosting_model_train_and_test.py \
+python ML_08v3_mlp_model_train_and_test.py \
 --output_prefix ${output_prefix} \
 --output_dir /data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/outputs/prediction_models/GradientBoosting/species \
 --dosage_dir_train /data100t1/home/wanying/CCHC/lipidomics/20231211_rerun/inputs/genotype_dosage/train/lipid_${lip_type} \
@@ -23,13 +23,10 @@ python ML_08v2_boosting_model_train_and_test.py \
 --model Gradient
 '''
 
-from sklearn.ensemble import AdaBoostRegressor
-from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.linear_model import LinearRegression, ElasticNet, Lasso
+from sklearn.neural_network import MLPRegressor
 from sklearn.metrics import r2_score
 from sklearn.experimental import enable_halving_search_cv # Required for HalvingGridSearch
 from sklearn.model_selection import HalvingGridSearchCV
-from sklearn.model_selection import GridSearchCV
 import argparse
 import logging
 import subprocess

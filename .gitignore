@@ -15,6 +15,15 @@ prediction_models/*
 20231211_rerun/*
 !20231211_rerun/code/
 
+# Enable other files
+!20240204_rerun_to_compare_with_phillip
+20240204_rerun_to_compare_with_phillip/*
+!20240204_rerun_to_compare_with_phillip/code/
+
+!20240405_rerun_fix_pearson_r_bug
+20240405_rerun_fix_pearson_r_bug/*
+!20240405_rerun_fix_pearson_r_bug/code/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
