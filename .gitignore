@@ -24,6 +24,26 @@ prediction_models/*
 20240405_rerun_fix_pearson_r_bug/*
 !20240405_rerun_fix_pearson_r_bug/code/
 
+!post_gwas_finemapping
+post_gwas_finemapping/*
+!post_gwas_finemapping/code/
+
+!gwas_plotting
+gwas_plotting/*
+!gwas_plotting/code/
+
+!20240529_differential_abundance_analysis
+20240529_differential_abundance_analysis/*
+!20240529_differential_abundance_analysis/code/
+
+!20240812_heritability_BSLMM
+20240812_heritability_BSLMM/*
+!20240812_heritability_BSLMM/code/
+
+!post_gwas_annotation
+post_gwas_annotation/*
+!post_gwas_annotation/code/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
